@@ -618,7 +618,7 @@ export default function Cart() {
                 يجب إضافة عنوان للتوصيل أولاً
               </p>
               <button
-                onClick={() => navigate("/addresses")}
+                onClick={handleAddAddress}
                 className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:shadow-lg transition-all flex items-center gap-2"
               >
                 <FaPlusCircle />
