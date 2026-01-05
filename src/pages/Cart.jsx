@@ -2238,7 +2238,7 @@ export default function Cart() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
               className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 transition-colors duration-300 relative"
-              style={{ zIndex: 100 }}
+              style={{ zIndex: 10 }}
             >
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
                 <FaMapMarkerAlt
