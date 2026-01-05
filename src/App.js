@@ -106,7 +106,7 @@ function App() {
       )}
 
       {/* Main content */}
-      <main className="flex-grow w-full bg-white dark:bg-gray-900 transition-colors duration-300">
+      <main className="flex-grow w-full bg-white dark:bg-gray-900 transition-colors duration-300 relative z-20">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<AuthPage />} />
@@ -142,7 +142,11 @@ function App() {
       </main>
 
       {/* Footer */}
-      {shouldShowNavbarFooter && <Footer />}
+      {shouldShowNavbarFooter && (
+        <div className="relative" style={{ zIndex: 1 }}>
+          <Footer />
+        </div>
+      )}
     </div>
   );
 }

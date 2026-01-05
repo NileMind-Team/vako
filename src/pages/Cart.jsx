@@ -2063,7 +2063,6 @@ export default function Cart() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-          {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -2238,7 +2237,8 @@ export default function Cart() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 transition-colors duration-300"
+              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 transition-colors duration-300 relative"
+              style={{ zIndex: 100 }}
             >
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
                 <FaMapMarkerAlt
@@ -2318,8 +2318,7 @@ export default function Cart() {
                 </div>
               </div>
 
-              {/* Branch Selection Dropdown - UPDATED DESIGN */}
-              <div className="mb-4 sm:mb-6">
+              <div className="mb-4 sm:mb-6 relative" style={{ zIndex: 10000 }}>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   اختر الفرع
                 </label>
@@ -2357,7 +2356,8 @@ export default function Cart() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -5 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto"
+                          className="absolute z-[99999] mt-2 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto"
+                          style={{ zIndex: 99999 }}
                         >
                           {branches.map((branch) => (
                             <li
@@ -2380,8 +2380,10 @@ export default function Cart() {
 
               {deliveryType === "delivery" && (
                 <>
-                  {/* Delivery Area Selection Dropdown - UPDATED DESIGN */}
-                  <div className="mb-4 sm:mb-6">
+                  <div
+                    className="mb-4 sm:mb-6 relative"
+                    style={{ zIndex: 1000 }}
+                  >
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       اختر منطقة التوصيل
                     </label>
@@ -2415,13 +2417,14 @@ export default function Cart() {
                         </button>
 
                         <AnimatePresence>
-                          {openDropdown === "area" && (
+                            {openDropdown === "area" && (
                             <motion.ul
                               initial={{ opacity: 0, y: -5 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -5 }}
                               transition={{ duration: 0.2 }}
-                              className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto"
+                              className="absolute z-[99999] mt-2 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-xl overflow-hidden max-h-48 overflow-y-auto"
+                              style={{ zIndex: 99999 }}
                             >
                               {deliveryAreas.map((area) => (
                                 <li
@@ -2509,12 +2512,13 @@ export default function Cart() {
             </motion.div>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:col-span-1">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 sticky top-4 h-fit max-h-[calc(100vh-2rem)] overflow-y-auto transition-colors duration-300"
+              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 
+                lg:sticky lg:top-4 h-fit max-h-[calc(100vh-2rem)] overflow-y-auto transition-colors duration-300"
+              style={{ zIndex: 1 }}
             >
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-4 sm:mb-6">
                 ملخص الطلب
