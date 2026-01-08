@@ -1619,22 +1619,22 @@ export default function MyOrders() {
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       />
                     </div>
-                  </div>
 
-                  <div className="flex pt-2 sm:pt-0">
-                    {(dateRange.start ||
-                      dateRange.end ||
-                      (isAdminOrRestaurantOrBranch && selectedUserId) ||
-                      (isAdminOrRestaurant && selectedBranchId) ||
-                      filter !== "all") && (
-                      <button
-                        onClick={clearAllFilters}
-                        className="w-full sm:w-auto px-4 py-3 bg-[#E41E26] text-white rounded-xl hover:bg-[#c91c23] transition-colors duration-200 text-sm sm:text-base whitespace-nowrap flex items-center justify-center gap-2"
-                      >
-                        <FaTrash className="w-3 h-3 sm:w-4 sm:h-4" />
-                        مسح الكل
-                      </button>
-                    )}
+                    <div className="flex pt-2 sm:pt-0">
+                      {(dateRange.start ||
+                        dateRange.end ||
+                        (isAdminOrRestaurantOrBranch && selectedUserId) ||
+                        (isAdminOrRestaurant && selectedBranchId) ||
+                        filter !== "all") && (
+                        <button
+                          onClick={clearAllFilters}
+                          className="w-full sm:w-auto px-4 py-3 bg-[#E41E26] text-white rounded-xl hover:bg-[#c91c23] transition-colors duration-200 text-sm sm:text-base whitespace-nowrap flex items-center justify-center gap-2"
+                        >
+                          <FaTrash className="w-3 h-3 sm:w-4 sm:h-4" />
+                          مسح الكل
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1731,7 +1731,9 @@ export default function MyOrders() {
                               </motion.button>
                             )}
 
-                            {order.status !== "Cancelled" &&
+                            {/* زر إلغاء الطلب - يظهر فقط للمستخدمين الذين لديهم صلاحيات Admin، Restaurant أو Branch */}
+                            {isAdminOrRestaurantOrBranch &&
+                              order.status !== "Cancelled" &&
                               order.status !== "Delivered" && (
                                 <motion.button
                                   whileHover={{ scale: 1.05 }}
@@ -2746,7 +2748,9 @@ export default function MyOrders() {
                           </motion.button>
                         )}
 
-                        {orderDetails.status !== "Cancelled" &&
+                        {/* زر إلغاء الطلب في تفاصيل الطلب - يظهر فقط للمستخدمين الذين لديهم صلاحيات Admin، Restaurant أو Branch */}
+                        {isAdminOrRestaurantOrBranch &&
+                          orderDetails.status !== "Cancelled" &&
                           orderDetails.status !== "Delivered" && (
                             <motion.button
                               whileHover={{ scale: 1.05 }}

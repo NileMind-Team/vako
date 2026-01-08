@@ -25,6 +25,7 @@ import {
   FaChartBar,
   FaArrowLeft,
   FaClock,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -132,6 +133,11 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   const handleReportsClick = () => {
     setIsSidebarOpen(false);
     navigate("/admin/reports");
+  };
+
+  const handleTimeDateReportsClick = () => {
+    setIsSidebarOpen(false);
+    navigate("/admin/time-date-reports");
   };
 
   const handleOrderShiftsClick = () => {
@@ -255,6 +261,12 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           color: "#E41E26",
         },
         {
+          onClick: handleTimeDateReportsClick,
+          icon: FaCalendarAlt,
+          label: "تقارير المبيعات بالوقت والتاريخ",
+          color: "#E41E26",
+        },
+        {
           onClick: handleAdminOrderShiftsClick,
           icon: FaClock,
           label: "تقارير الورديات",
@@ -293,6 +305,12 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           onClick: handleReportsClick,
           icon: FaChartBar,
           label: "تقارير المبيعات",
+          color: "#E41E26",
+        },
+        {
+          onClick: handleTimeDateReportsClick,
+          icon: FaCalendarAlt,
+          label: "تقارير الوقت والتاريخ",
           color: "#E41E26",
         },
         {

@@ -26,6 +26,7 @@ import ItemOffersManagement from "./pages/ItemOffersManagement";
 import SalesReports from "./pages/SalesReports";
 import OrderShiftsManagement from "./pages/OrderShiftsManagement";
 import OrderShiftsReport from "./pages/OrderShiftsReport";
+import TimeDateSalesReport from "./pages/TimeDateSalesReport";
 
 function App() {
   const location = useLocation();
@@ -138,6 +139,10 @@ function App() {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/order-shifts" element={<OrderShiftsManagement />} />
           <Route path="/admin/order-shifts" element={<OrderShiftsReport />} />
+          <Route
+            path="/admin/time-date-reports"
+            element={<TimeDateSalesReport />}
+          />
         </Routes>
       </main>
 
