@@ -94,6 +94,7 @@ export default function AuthPage() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [loggedUserName, setLoggedUserName] = useState("");
   const [loggedUserImage, setLoggedUserImage] = useState("");
+  const [isProcessingGoogle, setIsProcessingGoogle] = useState(false);
   const authLayoutRef = useRef(null);
   const loginFormRef = useRef(null);
   const registerFormRef = useRef(null);
@@ -201,6 +202,7 @@ export default function AuthPage() {
 
     if (token) {
       window.history.replaceState(null, "", "/auth");
+      setIsProcessingGoogle(true);
 
       const processGoogleLogin = async () => {
         try {
@@ -210,6 +212,7 @@ export default function AuthPage() {
             setLoggedUserName(result.firstName || result.email || "مستخدم");
             setLoggedUserImage(result.imageUrl || "");
             setShowWelcome(true);
+            setIsProcessingGoogle(false);
 
             setTimeout(() => {
               setShowWelcome(false);
@@ -217,6 +220,8 @@ export default function AuthPage() {
             }, 3000);
           }
         } catch (err) {
+          setIsProcessingGoogle(false);
+
           if (window.innerWidth < 768) {
             showAuthMobileAlertToast(
               "حدث خطأ أثناء تسجيل الدخول باستخدام Google",
@@ -604,6 +609,7 @@ export default function AuthPage() {
       onTabChange={handleTabChange}
       onBack={() => navigate(-1)}
       showWelcome={showWelcome}
+      isProcessingGoogle={isProcessingGoogle}
       onGoogleLogin={handleGoogleLogin}
       isGoogleLoading={isGoogleLoading}
       onLoginTabClick={handleLoginTabClick}
@@ -614,6 +620,10 @@ export default function AuthPage() {
           userName={loggedUserName}
           userImage={loggedUserImage}
         />
+      ) : isProcessingGoogle ? (
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26] dark:border-[#FDB913] mb-6"></div>
+        </div>
       ) : waitingForConfirmation ? (
         <WaitingConfirmation
           forgetMode={forgetMode}
