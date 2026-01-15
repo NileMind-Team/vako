@@ -25,8 +25,8 @@ const Footer = () => {
 
   const quickLinks = [
     { name: "الصفحة الرئيسية", path: "/" },
-    { name: "عربة التسوق", path: "/cart" },
-    { name: "عناويني", path: "/addresses" },
+    { name: "فروعنا", path: "/branches" },
+    { name: "ملفي الشخصي", path: "/profile" },
     { name: "المفضلة", path: "/favorites" },
   ];
 
@@ -163,8 +163,8 @@ const Footer = () => {
             </Link>
 
             <p className="text-gray-300 mb-6 leading-relaxed">
-              نقدم أشهى الدجاج المقلي والوجبات. جرب مزيجًا مثاليًا من القرمشة
-              اللذيذة والنكهات الأصيلة.
+              نقدم أحدث صيحات الموضة وأجود أنواع الملابس. اكتشف تشكيلة تجمع بين
+              الأناقة والراحة بأسلوب فريد.
             </p>
 
             <div className="space-y-3">

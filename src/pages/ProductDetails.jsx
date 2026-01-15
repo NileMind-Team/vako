@@ -2,21 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  FaShoppingCart,
-  FaPlus,
-  FaMinus,
   FaFire,
   FaClock,
   FaEdit,
   FaTrash,
   FaCheckCircle,
   FaTimesCircle,
-  FaCheck,
-  FaPlusCircle,
   FaSave,
   FaTimes,
-  FaLayerGroup,
-  FaStickyNote,
   FaPercent,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -29,39 +22,22 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [isAdminOrRestaurantOrBranch, setIsAdminOrRestaurantOrBranch] =
     useState(false);
   const [userRoles, setUserRoles] = useState([]);
-  const [selectedAddons, setSelectedAddons] = useState({});
-  const [isSticky, setIsSticky] = useState(false);
   const [addonsData, setAddonsData] = useState([]);
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [editingOption, setEditingOption] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [currentAddonId, setCurrentAddonId] = useState(null);
   const [optionForm, setOptionForm] = useState({
     name: "",
     price: 0,
   });
 
-  const [showAddonTypeModal, setShowAddonTypeModal] = useState(false);
-  const [addonTypeForm, setAddonTypeForm] = useState({
-    name: "",
-    canSelectMultipleOptions: false,
-    isSelectionRequired: false,
-  });
-
-  const [additionalNotes, setAdditionalNotes] = useState("");
-  const [showNotesModal, setShowNotesModal] = useState(false);
-  const [categoryInfo, setCategoryInfo] = useState(null);
-  const [newAddonOptions, setNewAddonOptions] = useState([]);
-  const [addingToCart, setAddingToCart] = useState(false);
   const modalRef = useRef(null);
-  const addonTypeModalRef = useRef(null);
-  const notesModalRef = useRef(null);
 
   const isMobile = () => {
     return window.innerWidth < 768;
@@ -194,25 +170,6 @@ const ProductDetails = () => {
     checkUserRole();
   }, []);
 
-  const fetchCartItemsCount = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const response = await axiosInstance.get("/api/CartItems/GetAll");
-      const cartItems = response.data;
-
-      const totalCount = cartItems.reduce(
-        (total, item) => total + item.quantity,
-        0
-      );
-      setCartItemsCount(totalCount);
-    } catch (error) {
-      console.error("Error fetching cart items:", error);
-      setCartItemsCount(0);
-    }
-  };
-
   const fetchCategoryInfo = async (categoryId) => {
     try {
       if (!categoryId) return;
@@ -220,10 +177,10 @@ const ProductDetails = () => {
       const response = await axiosInstance.get(
         `/api/Categories/Get/${categoryId}`
       );
-      setCategoryInfo(response.data);
+      return response.data;
     } catch (error) {
       console.error("Error fetching category info:", error);
-      setCategoryInfo(null);
+      return null;
     }
   };
 
@@ -260,6 +217,10 @@ const ProductDetails = () => {
             (1 - productData.itemOffer.discountValue / 100)
           : productData.basePrice - productData.itemOffer.discountValue
         : productData.basePrice;
+
+      const categoryInfo = productData.category?.id
+        ? await fetchCategoryInfo(productData.category.id)
+        : null;
 
       const transformedProduct = {
         id: productData.id,
@@ -299,13 +260,10 @@ const ProductDetails = () => {
         canSelectMultipleOptions: productData.canSelectMultipleOptions,
         isSelectionRequired: productData.isSelectionRequired,
         itemOffer: productData.itemOffer,
+        categoryInfo: categoryInfo,
       };
 
       setProduct(transformedProduct);
-
-      if (productData.category?.id) {
-        fetchCategoryInfo(productData.category.id);
-      }
     } catch (error) {
       console.error("Error fetching product details:", error);
       showMessage("error", "خطأ", "فشل في تحميل تفاصيل المنتج", {
@@ -321,43 +279,17 @@ const ProductDetails = () => {
 
   useEffect(() => {
     fetchProductDetails();
-    fetchCartItemsCount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const cartSection = document.getElementById("cart-section");
-      if (cartSection) {
-        const rect = cartSection.getBoundingClientRect();
-        setIsSticky(rect.top > 0);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         handleCloseOptionModal();
       }
-      if (
-        addonTypeModalRef.current &&
-        !addonTypeModalRef.current.contains(event.target)
-      ) {
-        handleCloseAddonTypeModal();
-      }
-      if (
-        notesModalRef.current &&
-        !notesModalRef.current.contains(event.target)
-      ) {
-        handleCloseNotesModal();
-      }
     };
 
-    if (showOptionModal || showAddonTypeModal || showNotesModal) {
+    if (showOptionModal) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("touchstart", handleClickOutside);
     }
@@ -366,7 +298,7 @@ const ProductDetails = () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [showOptionModal, showAddonTypeModal, showNotesModal]);
+  }, [showOptionModal]);
 
   const getDayName = (dayNumber) => {
     const days = [
@@ -425,8 +357,8 @@ const ProductDetails = () => {
   };
 
   const isCategoryDisabled = () => {
-    if (!categoryInfo) return false;
-    return !categoryInfo.isActive;
+    if (!product?.categoryInfo) return false;
+    return !product.categoryInfo.isActive;
   };
 
   // تحديث الدالة لتأخذ بعين الاعتبار isActive و isAvailable
@@ -436,168 +368,9 @@ const ProductDetails = () => {
     return product.isActive && product.isAvailable;
   };
 
-  const isProductAvailableForCart = () => {
-    if (!product) return false;
-
-    if (!isProductActive()) {
-      return false;
-    }
-
-    return !isCategoryDisabled();
-  };
-
   const canToggleProductActive = () => {
     if (!product?.categoryId) return true;
     return !isCategoryDisabled();
-  };
-
-  const incrementQuantity = () => setQuantity((prev) => prev + 1);
-  const decrementQuantity = () =>
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
-  const handleAddonSelect = (addonId, optionId, type) => {
-    setSelectedAddons((prev) => {
-      const newSelectedAddons = { ...prev };
-
-      if (type === "single") {
-        newSelectedAddons[addonId] = [optionId];
-      } else {
-        const currentSelections = newSelectedAddons[addonId] || [];
-
-        if (currentSelections.includes(optionId)) {
-          newSelectedAddons[addonId] = currentSelections.filter(
-            (id) => id !== optionId
-          );
-        } else {
-          newSelectedAddons[addonId] = [...currentSelections, optionId];
-        }
-
-        if (newSelectedAddons[addonId].length === 0) {
-          delete newSelectedAddons[addonId];
-        }
-      }
-
-      return newSelectedAddons;
-    });
-  };
-
-  const calculateTotalPrice = () => {
-    if (!product) return 0;
-
-    let total = 0;
-
-    if (!product.isPriceBasedOnRequest) {
-      const basePrice =
-        product.itemOffer && product.itemOffer.isEnabled
-          ? product.finalPrice
-          : product.price;
-      total = basePrice * quantity;
-    }
-
-    Object.values(selectedAddons).forEach((optionIds) => {
-      optionIds.forEach((optionId) => {
-        addonsData.forEach((addon) => {
-          const option = addon.options.find((opt) => opt.id === optionId);
-          if (option) {
-            total += option.price * quantity;
-          }
-        });
-      });
-    });
-
-    return total;
-  };
-
-  const handleAddToCart = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      Swal.fire({
-        title: "تسجيل الدخول مطلوب",
-        text: "يجب تسجيل الدخول لإضافة المنتجات إلى السلة",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#E41E26",
-        cancelButtonColor: "#6B7280",
-        confirmButtonText: "تسجيل الدخول",
-        cancelButtonText: "إنشاء حساب جديد",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login");
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          navigate("/register");
-        }
-      });
-      return;
-    }
-
-    if (!isProductAvailableForCart()) {
-      showMessage(
-        "warning",
-        "تحذير",
-        `لا يمكن إضافة هذا المنتج إلى السلة حالياً`,
-        { timer: 2000 }
-      );
-      return;
-    }
-
-    const requiredAddons = addonsData.filter(
-      (addon) => addon.isSelectionRequired
-    );
-    const missingRequiredAddons = requiredAddons.filter(
-      (addon) => !selectedAddons[addon.id]
-    );
-
-    if (missingRequiredAddons.length > 0) {
-      showMessage(
-        "warning",
-        "تحذير",
-        `يرجى اختيار ${missingRequiredAddons
-          .map((addon) => addon.title)
-          .join(" و ")}`,
-        { timer: 2000 }
-      );
-      return;
-    }
-
-    setAddingToCart(true);
-
-    try {
-      const options = [];
-      Object.values(selectedAddons).forEach((optionIds) => {
-        optionIds.forEach((optionId) => {
-          options.push(optionId);
-        });
-      });
-
-      await axiosInstance.post("/api/CartItems/AddCartItem", {
-        menuItemId: product.id,
-        quantity: quantity,
-        options: options,
-        note: additionalNotes.trim(),
-      });
-
-      await fetchCartItemsCount();
-
-      showMessage(
-        "success",
-        "تم بنجاح!",
-        `تم إضافة ${toArabicNumbers(quantity)} ${product.name} إلى سلة التسوق`,
-        { timer: 1500 }
-      );
-
-      setQuantity(1);
-      setSelectedAddons({});
-      setAdditionalNotes("");
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      showMessage("error", "خطأ", "فشل في إضافة المنتج إلى السلة", {
-        timer: 2000,
-      });
-    } finally {
-      setTimeout(() => {
-        setAddingToCart(false);
-      }, 500);
-    }
   };
 
   const handleEditProduct = () => {
@@ -696,16 +469,6 @@ const ProductDetails = () => {
     }
   };
 
-  const handleOpenAddOptionModal = (addonId) => {
-    setCurrentAddonId(addonId);
-    setEditingOption(null);
-    setOptionForm({
-      name: "",
-      price: 0,
-    });
-    setShowOptionModal(true);
-  };
-
   const handleOpenEditOptionModal = (addonId, option) => {
     setCurrentAddonId(addonId);
     setEditingOption(option);
@@ -754,17 +517,6 @@ const ProductDetails = () => {
         showMessage("success", "تم بنجاح!", "تم تحديث الخيار بنجاح", {
           timer: 2000,
         });
-      } else {
-        await axiosInstance.post(`/api/MenuItemOptions/Add`, {
-          menuItemId: parseInt(id),
-          typeId: currentAddonId,
-          name: optionForm.name,
-          price: optionForm.price,
-        });
-
-        showMessage("success", "تم بنجاح!", "تم إضافة الخيار بنجاح", {
-          timer: 2000,
-        });
       }
 
       await fetchProductDetails();
@@ -803,143 +555,9 @@ const ProductDetails = () => {
     });
   };
 
-  const handleOpenAddAddonTypeModal = () => {
-    setAddonTypeForm({
-      name: "",
-      canSelectMultipleOptions: false,
-      isSelectionRequired: false,
-    });
-    setNewAddonOptions([]);
-    setShowAddonTypeModal(true);
-  };
-
-  const handleCloseAddonTypeModal = () => {
-    setShowAddonTypeModal(false);
-    setAddonTypeForm({
-      name: "",
-      canSelectMultipleOptions: false,
-      isSelectionRequired: false,
-    });
-    setNewAddonOptions([]);
-  };
-
-  const handleAddonTypeFormChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setAddonTypeForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const addNewOptionField = () => {
-    setNewAddonOptions((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        name: "",
-        price: 0,
-      },
-    ]);
-  };
-
-  const updateNewOptionField = (id, field, value) => {
-    setNewAddonOptions((prev) =>
-      prev.map((option) =>
-        option.id === id
-          ? {
-              ...option,
-              [field]: field === "price" ? parseFloat(value) || 0 : value,
-            }
-          : option
-      )
-    );
-  };
-
-  const removeNewOptionField = (id) => {
-    setNewAddonOptions((prev) => prev.filter((option) => option.id !== id));
-  };
-
-  const handleSaveAddonType = async () => {
-    if (!addonTypeForm.name.trim()) {
-      showMessage("error", "خطأ", "يرجى إدخال اسم نوع الإضافة", {
-        timer: 2000,
-      });
-      return;
-    }
-
-    try {
-      const response = await axiosInstance.post(
-        `/api/MenuItemOptionTypes/Add`,
-        {
-          menuItemId: parseInt(id),
-          name: addonTypeForm.name,
-          canSelectMultipleOptions: addonTypeForm.canSelectMultipleOptions,
-          isSelectionRequired: addonTypeForm.isSelectionRequired,
-        }
-      );
-
-      const newAddonTypeId = response.data.id;
-
-      if (newAddonOptions.length > 0) {
-        const optionPromises = newAddonOptions.map((option) => {
-          if (option.name.trim()) {
-            return axiosInstance.post(`/api/MenuItemOptions/Add`, {
-              menuItemId: parseInt(id),
-              typeId: newAddonTypeId,
-              name: option.name,
-              price: option.price,
-            });
-          }
-          return Promise.resolve();
-        });
-
-        await Promise.all(optionPromises);
-      }
-
-      showMessage(
-        "success",
-        "تم بنجاح!",
-        "تم إضافة نوع الإضافة مع خياراته بنجاح",
-        { timer: 2000 }
-      );
-
-      await fetchProductDetails();
-      handleCloseAddonTypeModal();
-    } catch (error) {
-      console.error("Error saving addon type:", error);
-      showMessage("error", "خطأ", "فشل في حفظ نوع الإضافة", { timer: 2000 });
-    }
-  };
-
-  const handleOpenNotesModal = () => {
-    setShowNotesModal(true);
-  };
-
-  const handleCloseNotesModal = () => {
-    setShowNotesModal(false);
-  };
-
-  const handleSaveNotes = () => {
-    handleCloseNotesModal();
-    showMessage("success", "تم بنجاح!", "تم حفظ التعليمات الإضافية", {
-      timer: 1500,
-    });
-  };
-
-  const handleClearNotes = () => {
-    setAdditionalNotes("");
-    showMessage("info", "تم المسح", "تم مسح التعليمات الإضافية", {
-      timer: 1500,
-    });
-  };
-
   const isArabic = (text) => {
     const arabicRegex = /[\u0600-\u06FF]/;
     return arabicRegex.test(text);
-  };
-
-  const navigateToCart = () => {
-    navigate("/cart");
   };
 
   // التحقق من صلاحيات المستخدم
@@ -992,7 +610,7 @@ const ProductDetails = () => {
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-                {editingOption ? "تعديل الخيار" : "إضافة خيار جديد"}
+                تعديل الخيار
               </h3>
               <button
                 onClick={handleCloseOptionModal}
@@ -1047,290 +665,12 @@ const ProductDetails = () => {
                 className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <FaSave />
-                {editingOption ? "تحديث" : "حفظ"}
+                تحديث
               </button>
             </div>
           </motion.div>
         </div>
       )}
-
-      {/* Addon Type Modal */}
-      {showAddonTypeModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <motion.div
-            ref={addonTypeModalRef}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 overflow-y-auto max-h-[90vh]"
-            dir="rtl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-                إضافة نوع إضافة جديد
-              </h3>
-              <button
-                onClick={handleCloseAddonTypeModal}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-              >
-                <FaTimes className="text-lg" />
-              </button>
-            </div>
-
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    اسم نوع الإضافة *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={addonTypeForm.name}
-                    onChange={handleAddonTypeFormChange}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent"
-                    placeholder="أدخل اسم نوع الإضافة"
-                    autoFocus
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      id="canSelectMultipleOptions"
-                      name="canSelectMultipleOptions"
-                      checked={addonTypeForm.canSelectMultipleOptions}
-                      onChange={handleAddonTypeFormChange}
-                      className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
-                    />
-                    <label
-                      htmlFor="canSelectMultipleOptions"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      يمكن اختيار أكثر من خيار
-                    </label>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      id="isSelectionRequired"
-                      name="isSelectionRequired"
-                      checked={addonTypeForm.isSelectionRequired}
-                      onChange={handleAddonTypeFormChange}
-                      className="w-5 h-5 text-[#E41E26] rounded focus:ring-[#E41E26]"
-                    />
-                    <label
-                      htmlFor="isSelectionRequired"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                      اختيار إجباري
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Add Options Section */}
-              <div className="border-t pt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">
-                    إضافة خيارات
-                  </h4>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={addNewOptionField}
-                    className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
-                  >
-                    <FaPlusCircle className="text-xs" />
-                    إضافة خيار
-                  </motion.button>
-                </div>
-
-                <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
-                  {newAddonOptions.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
-                      لم يتم إضافة أي خيارات بعد
-                    </p>
-                  ) : (
-                    newAddonOptions.map((option, index) => (
-                      <div
-                        key={option.id}
-                        className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-600"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            خيار #{index + 1}
-                          </span>
-                          <button
-                            onClick={() => removeNewOptionField(option.id)}
-                            className="text-red-500 hover:text-red-700 transition-colors"
-                            type="button"
-                          >
-                            <FaTrash className="text-xs" />
-                          </button>
-                        </div>
-                        <div className="space-y-2">
-                          <div>
-                            <input
-                              type="text"
-                              value={option.name}
-                              onChange={(e) =>
-                                updateNewOptionField(
-                                  option.id,
-                                  "name",
-                                  e.target.value
-                                )
-                              }
-                              className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-[#E41E26] focus:border-transparent"
-                              placeholder="اسم الخيار"
-                            />
-                          </div>
-                          <div>
-                            <input
-                              type="number"
-                              value={option.price}
-                              onChange={(e) =>
-                                updateNewOptionField(
-                                  option.id,
-                                  "price",
-                                  e.target.value
-                                )
-                              }
-                              min="0"
-                              step="0.01"
-                              className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white focus:ring-1 focus:ring-[#E41E26] focus:border-transparent"
-                              placeholder="السعر (ج.م)"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3 mt-8">
-              <button
-                onClick={handleCloseAddonTypeModal}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-              >
-                إلغاء
-              </button>
-              <button
-                onClick={handleSaveAddonType}
-                className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap"
-              >
-                <FaSave />
-                حفظ
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* Notes Modal */}
-      {showNotesModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <motion.div
-            ref={notesModalRef}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6"
-            dir="rtl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <FaStickyNote className="text-[#E41E26] text-xl" />
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-                  تعليمات إضافية
-                </h3>
-              </div>
-              <button
-                onClick={handleCloseNotesModal}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-              >
-                <FaTimes className="text-lg" />
-              </button>
-            </div>
-
-            <div className="mb-6">
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                اكتب أي ملاحظات
-              </p>
-
-              <textarea
-                value={additionalNotes}
-                onChange={(e) => setAdditionalNotes(e.target.value)}
-                placeholder="اكتب تعليماتك هنا..."
-                className="w-full h-40 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent resize-none"
-                dir="rtl"
-                maxLength={500}
-                autoFocus
-              />
-
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  اختياري
-                </span>
-                <span
-                  className={`text-xs ${
-                    additionalNotes.length >= 450
-                      ? "text-red-500"
-                      : "text-gray-500 dark:text-gray-400"
-                  }`}
-                >
-                  {additionalNotes.length}/500
-                </span>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={handleClearNotes}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
-              >
-                <FaTrash className="text-sm" />
-                مسح
-              </button>
-              <button
-                onClick={handleCloseNotesModal}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-              >
-                إلغاء
-              </button>
-              <button
-                onClick={handleSaveNotes}
-                className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
-              >
-                <FaCheck className="text-sm" />
-                حفظ
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 transition-transform duration-200 ${
-          cartItemsCount === 0 ? "opacity-70" : ""
-        }`}
-        onClick={navigateToCart}
-      >
-        <div className="relative">
-          <FaShoppingCart className="w-4 h-4 sm:w-6 sm:h-6" />
-          {cartItemsCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold">
-              {cartItemsCount}
-            </span>
-          )}
-        </div>
-      </motion.div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 md:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
@@ -1442,7 +782,7 @@ const ProductDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 mb-4 md:mb-6 h-auto lg:max-h-[555px] flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 h-auto lg:max-h-[555px] flex flex-col">
               <div className="flex-1 overflow-hidden">
                 <div className="h-full overflow-y-auto custom-scrollbar pr-2 pb-4">
                   <div className="mb-4 md:mb-6">
@@ -1518,21 +858,6 @@ const ProductDetails = () => {
                   </div>
 
                   <div className="space-y-4 md:space-y-6">
-                    {canShowAdminButtons && (
-                      <div className="flex justify-end">
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={handleOpenAddAddonTypeModal}
-                          className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
-                          dir="rtl"
-                        >
-                          <FaLayerGroup />
-                          إضافة نوع إضافة جديد
-                        </motion.button>
-                      </div>
-                    )}
-
                     {addonsData.length > 0 &&
                       addonsData.map((addon) => (
                         <div
@@ -1556,237 +881,67 @@ const ProductDetails = () => {
                                 </span>
                               )}
                             </div>
-
-                            {canShowAdminButtons && (
-                              <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() =>
-                                  handleOpenAddOptionModal(addon.id)
-                                }
-                                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
-                              >
-                                <FaPlusCircle className="text-xs" />
-                                إضافة خيار
-                              </motion.button>
-                            )}
                           </div>
 
                           <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
-                            {addon.options.map((option) => {
-                              const isSelected = selectedAddons[
-                                addon.id
-                              ]?.includes(option.id);
-                              return (
-                                <div key={option.id} className="relative">
-                                  <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={() =>
-                                      handleAddonSelect(
-                                        addon.id,
-                                        option.id,
-                                        addon.type
-                                      )
-                                    }
-                                    className={`w-full p-2 md:p-3 rounded-lg md:rounded-xl border-2 transition-all duration-200 flex items-center justify-between ${
-                                      isSelected
-                                        ? "border-[#E41E26] bg-red-50 dark:bg-red-900/20"
-                                        : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
-                                    }`}
-                                    dir="rtl"
-                                  >
-                                    <div className="flex items-center gap-1 md:gap-2">
-                                      <span
-                                        className={`font-medium text-sm md:text-base ${
-                                          isSelected
-                                            ? "text-[#E41E26]"
-                                            : "text-gray-700 dark:text-gray-300"
-                                        }`}
-                                      >
-                                        {option.name}
-                                      </span>
-                                      {isSelected && (
-                                        <FaCheck className="text-[#E41E26] text-xs md:text-sm" />
-                                      )}
-                                    </div>
+                            {addon.options.map((option) => (
+                              <div key={option.id} className="relative">
+                                <div
+                                  className="w-full p-2 md:p-3 rounded-lg md:rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 flex items-center justify-between"
+                                  dir="rtl"
+                                >
+                                  <div className="flex items-center gap-1 md:gap-2">
+                                    <span className="font-medium text-sm md:text-base text-gray-700 dark:text-gray-300">
+                                      {option.name}
+                                    </span>
+                                  </div>
 
-                                    {option.price > 0 && (
-                                      <span className="text-xs md:text-sm text-green-600 dark:text-green-400 font-semibold">
-                                        +{toArabicNumbers(option.price)} ج.م
-                                      </span>
-                                    )}
-                                  </motion.button>
-
-                                  {canShowAdminButtons && (
-                                    <div className="absolute -top-2 -right-2 flex gap-1 z-10">
-                                      <motion.button
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleOpenEditOptionModal(
-                                            addon.id,
-                                            option
-                                          );
-                                        }}
-                                        className="bg-blue-500 text-white p-1.5 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
-                                        title="تعديل"
-                                      >
-                                        <FaEdit className="text-xs" />
-                                      </motion.button>
-                                      <motion.button
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleDeleteOption(option.id);
-                                        }}
-                                        className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors shadow-md"
-                                        title="حذف"
-                                      >
-                                        <FaTrash className="text-xs" />
-                                      </motion.button>
-                                    </div>
+                                  {option.price > 0 && (
+                                    <span className="text-xs md:text-sm text-green-600 dark:text-green-400 font-semibold">
+                                      +{toArabicNumbers(option.price)} ج.م
+                                    </span>
                                   )}
                                 </div>
-                              );
-                            })}
+
+                                {canShowAdminButtons && (
+                                  <div className="absolute -top-2 -right-2 flex gap-1 z-10">
+                                    <motion.button
+                                      whileHover={{ scale: 1.1 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleOpenEditOptionModal(
+                                          addon.id,
+                                          option
+                                        );
+                                      }}
+                                      className="bg-blue-500 text-white p-1.5 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
+                                      title="تعديل"
+                                    >
+                                      <FaEdit className="text-xs" />
+                                    </motion.button>
+                                    <motion.button
+                                      whileHover={{ scale: 1.1 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteOption(option.id);
+                                      }}
+                                      className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors shadow-md"
+                                      title="حذف"
+                                    >
+                                      <FaTrash className="text-xs" />
+                                    </motion.button>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
                           </div>
                         </div>
                       ))}
-
-                    {/* التعديلات هنا: عرض التعليمات مباشرة إذا كانت موجودة */}
-                    <div
-                      onClick={handleOpenNotesModal}
-                      className={`w-full rounded-xl md:rounded-2xl p-3 md:p-4 text-center transition-all duration-300 cursor-pointer ${
-                        additionalNotes
-                          ? "bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-solid border-green-300 dark:border-green-600 hover:border-green-400 dark:hover:border-green-500"
-                          : "bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 border-2 border-dashed border-indigo-300 dark:border-indigo-600 hover:border-solid hover:border-indigo-400 dark:hover:border-indigo-500"
-                      }`}
-                      dir="rtl"
-                    >
-                      <div className="flex flex-col items-center justify-center gap-2">
-                        <div
-                          className={`p-2 rounded-full ${
-                            additionalNotes
-                              ? "bg-green-100 dark:bg-green-800/50"
-                              : "bg-indigo-100 dark:bg-indigo-800/50"
-                          }`}
-                        >
-                          <FaStickyNote
-                            className={`text-xl ${
-                              additionalNotes
-                                ? "text-green-600 dark:text-green-400"
-                                : "text-indigo-600 dark:text-indigo-400"
-                            }`}
-                          />
-                        </div>
-                        <div>
-                          <h4
-                            className={`font-semibold text-base md:text-lg ${
-                              additionalNotes
-                                ? "text-green-700 dark:text-green-300"
-                                : "text-indigo-700 dark:text-indigo-300"
-                            }`}
-                          >
-                            {additionalNotes
-                              ? "تعليمات إضافية"
-                              : "إضافة تعليمات إضافية"}
-                          </h4>
-                          <p
-                            className={`text-xs md:text-sm mt-1 ${
-                              additionalNotes
-                                ? "text-green-600/70 dark:text-green-400/70"
-                                : "text-indigo-600/70 dark:text-indigo-400/70"
-                            }`}
-                          >
-                            {additionalNotes
-                              ? `انقر لتعديل التعليمات: ${additionalNotes.substring(
-                                  0,
-                                  60
-                                )}${additionalNotes.length > 60 ? "..." : ""}`
-                              : "انقر لإضافة تعليمات إضافية"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div
-              id="cart-section"
-              className={`bg-white dark:bg-gray-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 transition-all duration-300 ${
-                isSticky
-                  ? "sticky bottom-4 z-10 lg:relative lg:bottom-0"
-                  : "relative"
-              }`}
-            >
-              <div
-                className="flex flex-row items-center justify-between gap-4 mb-4 md:mb-6"
-                dir="rtl"
-              >
-                <div
-                  className="w-[95px] sm:w-auto flex items-center justify-between sm:justify-start gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg md:rounded-xl p-1.5 sm:p-3 flex-shrink-0 order-2 sm:order-1"
-                  dir="ltr"
-                >
-                  <button
-                    onClick={decrementQuantity}
-                    className="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
-                  >
-                    <FaMinus className="text-sm" />
-                  </button>
-
-                  <span className="font-semibold text-base min-w-6 text-center dark:text-gray-200">
-                    {toArabicNumbers(quantity)}
-                  </span>
-
-                  <button
-                    onClick={incrementQuantity}
-                    className="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
-                  >
-                    <FaPlus className="text-sm" />
-                  </button>
-                </div>
-
-                <div className="text-xl md:text-2xl font-bold text-[#E41E26] whitespace-nowrap text-center sm:text-right order-1 sm:order-2">
-                  الإجمالي: {toArabicNumbers(calculateTotalPrice().toFixed(2))}{" "}
-                  ج.م
-                </div>
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleAddToCart}
-                disabled={!isProductAvailableForCart() || addingToCart}
-                className={`w-full py-3 md:py-4 rounded-xl md:rounded-2xl font-semibold text-lg md:text-xl hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 md:gap-4 ${
-                  addingToCart
-                    ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white cursor-wait"
-                    : isProductAvailableForCart()
-                    ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
-                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                }`}
-                dir="rtl"
-              >
-                {addingToCart ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                    <span>يتم الإضافة...</span>
-                  </>
-                ) : (
-                  <>
-                    <FaShoppingCart className="text-lg md:text-xl" />
-                    {isProductAvailableForCart()
-                      ? `أضف إلى السلة - ${toArabicNumbers(
-                          calculateTotalPrice().toFixed(2)
-                        )} ج.م`
-                      : "غير متوفر"}
-                  </>
-                )}
-              </motion.button>
             </div>
           </motion.div>
         </div>

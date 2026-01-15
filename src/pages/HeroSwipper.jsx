@@ -3,14 +3,12 @@ import { motion } from "framer-motion";
 import {
   FaChevronLeft,
   FaChevronRight,
-  FaShoppingCart,
   FaFire,
   FaTag,
   FaClock,
   FaPercent,
   FaMoneyBillWave,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -46,7 +44,6 @@ const HeroSwipper = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const styleElement = document.createElement("style");
@@ -131,7 +128,6 @@ const HeroSwipper = () => {
             discountText: discountText,
             preparationTime: preparationTime,
             category: item.category?.name || "عام",
-            ctaText: "اطلب الآن",
             bgColor: colorGradients[index % colorGradients.length],
             hasOffer: item.itemOffer && item.itemOffer.isEnabled,
             productData: item,
@@ -157,10 +153,6 @@ const HeroSwipper = () => {
 
     fetchSliderItems();
   }, []);
-
-  const handleOrderNow = (slide) => {
-    navigate(`/product/${slide.id}`, { state: { product: slide.productData } });
-  };
 
   const formatPrice = (price) => {
     return price.toFixed(2);
@@ -344,22 +336,6 @@ const HeroSwipper = () => {
                           </div>
                         )}
                       </div>
-
-                      <motion.button
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        onClick={() => handleOrderNow(slide)}
-                        className="group relative bg-gradient-to-r from-white to-gray-100 text-gray-900 px-2 py-1 sm:px-3 sm:py-1 md:px-4 md:py-2 rounded-lg font-bold text-xs sm:text-sm md:text-base hover:shadow-lg hover:scale-105 transition-all duration-250 transform flex items-center gap-1 sm:gap-2 mx-auto lg:mx-0 overflow-hidden w-fit"
-                        dir="rtl"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#E41E26] to-[#FDB913] opacity-0 group-hover:opacity-20 transition-opacity duration-250"></div>
-                        <span className="relative z-10">{slide.ctaText}</span>
-                        <FaShoppingCart
-                          className="relative z-10 group-hover:translate-x-0.5 transition-transform duration-250"
-                          size={10}
-                        />
-                      </motion.button>
                     </motion.div>
 
                     {/* Right Side - Image Preview */}

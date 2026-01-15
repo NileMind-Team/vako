@@ -4,17 +4,13 @@ import {
   FaChevronDown,
   FaUser,
   FaSignOutAlt,
-  FaMapMarkerAlt,
   FaStar,
-  FaShoppingCart,
-  FaClipboardList,
   FaTimes,
   FaUsers,
   FaUserShield,
   FaBuilding,
   FaMoon,
   FaSun,
-  FaMoneyBillWave,
   FaCity,
   FaStore,
   FaCodeBranch,
@@ -22,10 +18,7 @@ import {
   FaHeart,
   FaMap,
   FaPercent,
-  FaChartBar,
   FaArrowLeft,
-  FaClock,
-  FaCalendarAlt,
 } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -70,24 +63,9 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
     navigate("/profile");
   };
 
-  const handleAddressesClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/addresses");
-  };
-
   const handleReviewsClick = () => {
     setIsSidebarOpen(false);
     navigate("/reviews");
-  };
-
-  const handleOrdersClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/my-orders");
-  };
-
-  const handleCartClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/cart");
   };
 
   const handleFavoritesClick = () => {
@@ -115,11 +93,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
     navigate("/admin/branches");
   };
 
-  const handleDeliveryCostClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/admin/delivery-cost");
-  };
-
   const handleCitiesClick = () => {
     setIsSidebarOpen(false);
     navigate("/admin/cities");
@@ -128,26 +101,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   const handleItemOffersClick = () => {
     setIsSidebarOpen(false);
     navigate("/admin/item-offers");
-  };
-
-  const handleReportsClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/admin/reports");
-  };
-
-  const handleTimeDateReportsClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/admin/time-date-reports");
-  };
-
-  const handleOrderShiftsClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/order-shifts");
-  };
-
-  const handleAdminOrderShiftsClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/admin/order-shifts");
   };
 
   useEffect(() => {
@@ -237,12 +190,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           color: "#E41E26",
         },
         {
-          onClick: handleDeliveryCostClick,
-          icon: FaMoneyBillWave,
-          label: "تكاليف التوصيل",
-          color: "#E41E26",
-        },
-        {
           onClick: handleItemOffersClick,
           icon: FaPercent,
           label: "إدارة الخصومات",
@@ -252,24 +199,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           onClick: handleCitiesClick,
           icon: FaCity,
           label: "إدارة المدن",
-          color: "#E41E26",
-        },
-        {
-          onClick: handleReportsClick,
-          icon: FaChartBar,
-          label: "تقارير المبيعات",
-          color: "#E41E26",
-        },
-        {
-          onClick: handleTimeDateReportsClick,
-          icon: FaCalendarAlt,
-          label: "تقارير المبيعات بالوقت والتاريخ",
-          color: "#E41E26",
-        },
-        {
-          onClick: handleAdminOrderShiftsClick,
-          icon: FaClock,
-          label: "تقارير الورديات",
           color: "#E41E26",
         }
       );
@@ -284,12 +213,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           color: "#E41E26",
         },
         {
-          onClick: handleDeliveryCostClick,
-          icon: FaMoneyBillWave,
-          label: "تكاليف التوصيل",
-          color: "#E41E26",
-        },
-        {
           onClick: handleItemOffersClick,
           icon: FaPercent,
           label: "إدارة الخصومات",
@@ -299,24 +222,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           onClick: handleCitiesClick,
           icon: FaCity,
           label: "إدارة المدن",
-          color: "#E41E26",
-        },
-        {
-          onClick: handleReportsClick,
-          icon: FaChartBar,
-          label: "تقارير المبيعات",
-          color: "#E41E26",
-        },
-        {
-          onClick: handleTimeDateReportsClick,
-          icon: FaCalendarAlt,
-          label: "تقارير الوقت والتاريخ",
-          color: "#E41E26",
-        },
-        {
-          onClick: handleAdminOrderShiftsClick,
-          icon: FaClock,
-          label: "تقارير الورديات",
           color: "#E41E26",
         },
       ];
@@ -333,7 +238,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
   const adminMenuItems = getAdminMenuItems();
   const hasAdminAccess = hasAnyRole(["Admin", "Restaurant"]);
-  const hasOrderShiftsAccess = hasAnyRole(["Admin", "Restaurant", "Branch"]);
 
   if (loading) {
     return (
@@ -685,24 +589,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                     </div>
                   )}
 
-                  {hasOrderShiftsAccess && (
-                    <motion.div
-                      whileHover={{ scale: 1.02, x: -4 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <button
-                        onClick={handleOrderShiftsClick}
-                        className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
-                        dir="rtl"
-                      >
-                        <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                          <FaClock className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
-                        </div>
-                        <span className="text-lg truncate">الورديات</span>
-                      </button>
-                    </motion.div>
-                  )}
-
                   <motion.div
                     whileHover={{ scale: 1.02, x: -4 }}
                     whileTap={{ scale: 0.98 }}
@@ -724,38 +610,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <button
-                      onClick={handleOrdersClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
-                      dir="rtl"
-                    >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaClipboardList className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
-                      </div>
-                      <span className="text-lg truncate">طلباتي</span>
-                    </button>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.02, x: -4 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <button
-                      onClick={handleCartClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
-                      dir="rtl"
-                    >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaShoppingCart className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
-                      </div>
-                      <span className="text-lg truncate">عربة التسوق</span>
-                    </button>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.02, x: -4 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <button
                       onClick={handleFavoritesClick}
                       className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
                       dir="rtl"
@@ -764,22 +618,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                         <FaHeart className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
                       </div>
                       <span className="text-lg truncate">المفضلة</span>
-                    </button>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.02, x: -4 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <button
-                      onClick={handleAddressesClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
-                      dir="rtl"
-                    >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaMapMarkerAlt className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
-                      </div>
-                      <span className="text-lg truncate">عناويني</span>
                     </button>
                   </motion.div>
 

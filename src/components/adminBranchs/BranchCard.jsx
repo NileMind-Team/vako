@@ -8,7 +8,6 @@ import {
   FaPhone,
   FaWhatsapp,
   FaEdit,
-  FaUsers,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -79,12 +78,6 @@ const BranchCard = ({
                 >
                   {branch.status === "Open" ? "مفتوح" : "مغلق"}
                 </div>
-                {branch.supportsShifts && (
-                  <div className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 flex items-center gap-1">
-                    <FaUsers className="text-xs" />
-                    يدعم الشفتات
-                  </div>
-                )}
               </div>
             </div>
 

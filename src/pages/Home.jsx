@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
-  FaShoppingCart,
   FaPlus,
   FaEdit,
   FaTrash,
@@ -33,7 +32,6 @@ const Home = () => {
   // eslint-disable-next-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState([]);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [isAdminOrRestaurantOrBranch, setIsAdminOrRestaurantOrBranch] =
     useState(false);
@@ -52,7 +50,6 @@ const Home = () => {
   // eslint-disable-next-line no-unused-vars
   const [pageSize, setPageSize] = useState(8);
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [addingToCart, setAddingToCart] = useState(null);
 
   const categoriesContainerRef = useRef(null);
   const categoriesSectionRef = useRef(null);
@@ -444,25 +441,6 @@ const Home = () => {
     }
   };
 
-  const fetchCartItemsCount = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const response = await axiosInstance.get("/api/CartItems/GetAll");
-      const cartItems = response.data;
-
-      const totalCount = cartItems.reduce(
-        (total, item) => total + item.quantity,
-        0
-      );
-      setCartItemsCount(totalCount);
-    } catch (error) {
-      console.error("Error fetching cart items:", error);
-      setCartItemsCount(0);
-    }
-  };
-
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
@@ -477,7 +455,6 @@ const Home = () => {
     };
 
     fetchFavorites();
-    fetchCartItemsCount();
   }, []);
 
   const getDayName = (dayNumber) => {
@@ -591,145 +568,6 @@ const Home = () => {
 
   const handleProductDetails = (product) => {
     navigate(`/product/${product.id}`, { state: { product } });
-  };
-
-  const extractRequiredOptionsFromError = (errorDescription) => {
-    if (!errorDescription) return [];
-
-    let optionsText = errorDescription
-      .replace("You must select at least one option for:", "")
-      .replace(".", "")
-      .trim();
-
-    const optionsList = optionsText
-      .split(/،|,|\sو\s/)
-      .map((option) => option.trim())
-      .filter(Boolean);
-
-    return optionsList;
-  };
-
-  const formatOptionsForDisplay = (optionsList) => {
-    if (optionsList.length === 0) return "";
-
-    if (optionsList.length === 1) {
-      return optionsList[0];
-    }
-
-    if (optionsList.length === 2) {
-      return `${optionsList[0]} و ${optionsList[1]}`;
-    }
-
-    const lastOption = optionsList[optionsList.length - 1];
-    const otherOptions = optionsList.slice(0, -1);
-    return `${otherOptions.join("، ")} و ${lastOption}`;
-  };
-
-  const handleAddToCart = async (product, e) => {
-    e.stopPropagation();
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      Swal.fire({
-        title: "تسجيل الدخول مطلوب",
-        text: "يجب تسجيل الدخول لإضافة المنتجات إلى السلة",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#E41E26",
-        cancelButtonColor: "#6B7280",
-        confirmButtonText: "تسجيل الدخول",
-        cancelButtonText: "إنشاء حساب جديد",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login");
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          navigate("/register");
-        }
-      });
-      return;
-    }
-
-    if (!isProductAvailableForCart(product)) {
-      showNotification(
-        "error",
-        "المنتج غير متوفر",
-        `${product.name} غير متوفر حالياً`,
-        { timer: 2000 }
-      );
-      return;
-    }
-
-    setAddingToCart(product.id);
-
-    try {
-      await axiosInstance.post("/api/CartItems/AddCartItem", {
-        menuItemId: product.id,
-        note: "",
-        quantity: 1,
-        options: [],
-      });
-
-      await fetchCartItemsCount();
-
-      showNotification(
-        "success",
-        "تم الإضافة إلى السلة!",
-        `تم إضافة ${product.name} إلى سلة التسوق`,
-        { timer: 1500 }
-      );
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-
-      if (error.response && error.response.data && error.response.data.errors) {
-        const errors = error.response.data.errors;
-        const missingOptionsError = errors.find(
-          (err) => err.code === "MissingRequiredOptions"
-        );
-
-        if (missingOptionsError) {
-          const requiredOptions = extractRequiredOptionsFromError(
-            missingOptionsError.description
-          );
-
-          if (requiredOptions.length > 0) {
-            const formattedOptions = formatOptionsForDisplay(requiredOptions);
-
-            let errorMessage;
-            if (requiredOptions.length === 1) {
-              errorMessage = `يجب تحديد خيار واحد على الأقل من: ${formattedOptions}. الرجاء عرض تفاصيل المنتج لتحديد الخيارات المطلوبة.`;
-            } else {
-              errorMessage = `يجب تحديد خيار واحد على الأقل من كل من: ${formattedOptions}. الرجاء عرض تفاصيل المنتج لتحديد الخيارات المطلوبة.`;
-            }
-
-            Swal.fire({
-              icon: "warning",
-              title: "خيارات مطلوبة",
-              text: errorMessage,
-              showConfirmButton: true,
-              confirmButtonText: "عرض التفاصيل",
-              showCancelButton: true,
-              cancelButtonText: "إلغاء",
-              confirmButtonColor: "#E41E26",
-              cancelButtonColor: "#6B7280",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                handleProductDetails(product);
-              }
-            });
-            setAddingToCart(null);
-            return;
-          }
-        }
-      }
-
-      showNotification("error", "خطأ", "فشل في إضافة المنتج إلى السلة", {
-        timer: 2000,
-      });
-    } finally {
-      setTimeout(() => {
-        setAddingToCart(null);
-      }, 500);
-    }
   };
 
   const handleEditProduct = (product, e) => {
@@ -1252,11 +1090,6 @@ const Home = () => {
     navigate("/favorites");
   };
 
-  const handleNavigateToCart = () => {
-    if (!checkLogin("سلة التسوق")) return;
-    navigate("/cart");
-  };
-
   const handleCategorySelectFromFooter = (categoryId) => {
     setSelectedCategory(categoryId);
     setCurrentPage(1);
@@ -1602,45 +1435,10 @@ const Home = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={(e) => {
-                            if (isProductAvailableForCart(product)) {
-                              handleAddToCart(product, e);
-                            }
-                          }}
-                          disabled={
-                            !isProductAvailableForCart(product) ||
-                            addingToCart === product.id
-                          }
-                          className={`flex-1 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 text-xs no-product-details ${
-                            addingToCart === product.id
-                              ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white cursor-wait"
-                              : isProductAvailableForCart(product)
-                              ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
-                              : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                          }`}
-                        >
-                          {addingToCart === product.id ? (
-                            <>
-                              <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-white"></div>
-                              <span>يتم الإضافة...</span>
-                            </>
-                          ) : (
-                            <>
-                              <FaShoppingCart className="w-3.5 h-3.5" />
-                              <span>
-                                {!isProductAvailableForCart(product)
-                                  ? "غير متوفر"
-                                  : "أضف إلى السلة"}
-                              </span>
-                            </>
-                          )}
-                        </button>
-
-                        <button
-                          onClick={(e) => {
                             e.stopPropagation();
                             handleProductDetails(product);
                           }}
-                          className="flex-1 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 text-xs no-product-details bg-gradient-to-r from-gray-600 to-gray-800 text-white"
+                          className="flex-1 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 text-xs no-product-details bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
                         >
                           <FaEye className="w-3.5 h-3.5" />
                           <span>عرض التفاصيل</span>
@@ -1648,17 +1446,18 @@ const Home = () => {
 
                         <button
                           onClick={(e) => handleToggleFavorite(product, e)}
-                          className={`p-2.5 rounded-xl font-semibold flex items-center justify-center text-xs no-product-details ${
+                          className={`flex-1 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 text-xs no-product-details ${
                             isProductInFavorites(product.id)
                               ? "text-red-500 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30"
                               : "text-gray-400 bg-gray-50 dark:bg-gray-700 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600"
                           }`}
                         >
                           {isProductInFavorites(product.id) ? (
-                            <FaHeart size={16} />
+                            <FaHeart className="w-3.5 h-3.5" />
                           ) : (
-                            <FaRegHeart size={16} />
+                            <FaRegHeart className="w-3.5 h-3.5" />
                           )}
+                          <span>المفضلة</span>
                         </button>
                       </div>
                     </div>
@@ -1711,45 +1510,10 @@ const Home = () => {
                       <div className="flex gap-2 mt-3 sm:mt-4">
                         <button
                           onClick={(e) => {
-                            if (isProductAvailableForCart(product)) {
-                              handleAddToCart(product, e);
-                            }
-                          }}
-                          disabled={
-                            !isProductAvailableForCart(product) ||
-                            addingToCart === product.id
-                          }
-                          className={`flex-1 py-2 sm:py-2.5 rounded-xl font-semibold flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm no-product-details ${
-                            addingToCart === product.id
-                              ? "bg-gradient-to-r from-gray-500 to-gray-600 text-white cursor-wait"
-                              : isProductAvailableForCart(product)
-                              ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
-                              : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                          }`}
-                        >
-                          {addingToCart === product.id ? (
-                            <>
-                              <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-white"></div>
-                              <span className="xs:hidden">يتم الإضافة...</span>
-                            </>
-                          ) : (
-                            <>
-                              <FaShoppingCart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                              <span className="xs:hidden">
-                                {!isProductAvailableForCart(product)
-                                  ? "غير متوفر"
-                                  : "أضف إلى السلة"}
-                              </span>
-                            </>
-                          )}
-                        </button>
-
-                        <button
-                          onClick={(e) => {
                             e.stopPropagation();
                             handleProductDetails(product);
                           }}
-                          className="flex-1 py-2 sm:py-2.5 rounded-xl font-semibold flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm no-product-details bg-gradient-to-r from-gray-600 to-gray-800 text-white"
+                          className="flex-1 py-2 sm:py-2.5 rounded-xl font-semibold flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm no-product-details bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white"
                         >
                           <FaEye className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           <span className="xs:hidden">عرض التفاصيل</span>
@@ -1815,23 +1579,6 @@ const Home = () => {
             )}
           </div>
         )}
-      </div>
-
-      {/* Cart Button */}
-      <div
-        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-full p-3 sm:p-4 shadow-2xl z-40 cursor-pointer hover:scale-110 no-product-details ${
-          cartItemsCount === 0 ? "opacity-70" : ""
-        }`}
-        onClick={handleNavigateToCart}
-      >
-        <div className="relative">
-          <FaShoppingCart className="w-4 h-4 sm:w-6 sm:h-6" />
-          {cartItemsCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-white text-[#E41E26] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold">
-              {cartItemsCount}
-            </span>
-          )}
-        </div>
       </div>
 
       {/* Floating Buttons - Always Visible Favorites Button */}
