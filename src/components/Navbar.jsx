@@ -15,7 +15,6 @@ import {
   FaStore,
   FaCodeBranch,
   FaUserCircle,
-  FaHeart,
   FaMap,
   FaPercent,
   FaArrowLeft,
@@ -66,11 +65,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   const handleReviewsClick = () => {
     setIsSidebarOpen(false);
     navigate("/reviews");
-  };
-
-  const handleFavoritesClick = () => {
-    setIsSidebarOpen(false);
-    navigate("/favorites");
   };
 
   const handleHomeClick = () => {
@@ -602,22 +596,6 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                         <FaUser className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
                       </div>
                       <span className="text-lg truncate">ملفي الشخصي</span>
-                    </button>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.02, x: -4 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <button
-                      onClick={handleFavoritesClick}
-                      className="w-full text-right flex items-center gap-4 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-[#fff8e7] hover:to-[#ffe5b4] dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200 font-medium rounded-xl border border-transparent hover:border-[#FDB913]/30 dark:hover:border-gray-500"
-                      dir="rtl"
-                    >
-                      <div className="flex-shrink-0 p-2 bg-[#E41E26]/10 dark:bg-[#FDB913]/20 rounded-lg">
-                        <FaHeart className="text-[#E41E26] dark:text-[#FDB913] text-lg" />
-                      </div>
-                      <span className="text-lg truncate">المفضلة</span>
                     </button>
                   </motion.div>
 

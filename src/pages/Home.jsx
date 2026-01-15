@@ -13,8 +13,6 @@ import {
   FaTimes,
   FaLayerGroup,
   FaTag,
-  FaHeart,
-  FaRegHeart,
   FaFire,
   FaPercent,
 } from "react-icons/fa";
@@ -31,7 +29,6 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   // eslint-disable-next-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
-  const [favorites, setFavorites] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [isAdminOrRestaurantOrBranch, setIsAdminOrRestaurantOrBranch] =
     useState(false);
@@ -189,7 +186,6 @@ const Home = () => {
                 <div className="flex gap-2">
                   <div className="flex-1 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
                   <div className="flex-1 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
-                  <div className="p-2.5 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
                 </div>
               </div>
             </div>
@@ -206,11 +202,9 @@ const Home = () => {
                   <div className="flex items-center gap-2">
                     <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
                   </div>
-                  <div className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"></div>
                 </div>
 
                 <div className="flex gap-2 mt-3 sm:mt-4">
-                  <div className="flex-1 py-2 sm:py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
                   <div className="flex-1 py-2 sm:py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
                 </div>
               </div>
@@ -441,22 +435,6 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        const response = await axiosInstance.get("/api/Favorites/GetAll");
-        setFavorites(response.data);
-      } catch (error) {
-        console.error("Error fetching favorites:", error);
-      }
-    };
-
-    fetchFavorites();
-  }, []);
-
   const getDayName = (dayNumber) => {
     const days = [
       "الأحد",
@@ -502,69 +480,6 @@ const Home = () => {
 
     setFilteredProducts(filtered);
   }, [searchTerm, products, selectedCategory]);
-
-  const isProductInFavorites = (productId) => {
-    return favorites.some((fav) => fav.menuItemId === productId);
-  };
-
-  const handleToggleFavorite = async (product, e) => {
-    e.stopPropagation();
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      Swal.fire({
-        title: "تسجيل الدخول مطلوب",
-        text: "يجب تسجيل الدخول لإضافة المنتجات إلى المفضلة",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#E41E26",
-        cancelButtonColor: "#6B7280",
-        confirmButtonText: "تسجيل الدخول",
-        cancelButtonText: "إنشاء حساب جديد",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login");
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          navigate("/register");
-        }
-      });
-      return;
-    }
-
-    try {
-      if (isProductInFavorites(product.id)) {
-        const favoriteItem = favorites.find(
-          (fav) => fav.menuItemId === product.id
-        );
-        await axiosInstance.delete(`/api/Favorites/Delete/${favoriteItem.id}`);
-        setFavorites(favorites.filter((fav) => fav.menuItemId !== product.id));
-
-        showNotification(
-          "success",
-          "تم الإزالة",
-          `تم إزالة ${product.name} من المفضلة`,
-          { timer: 1500 }
-        );
-      } else {
-        await axiosInstance.post("/api/Favorites/Add", {
-          menuItemId: product.id,
-        });
-
-        const response = await axiosInstance.get("/api/Favorites/GetAll");
-        setFavorites(response.data);
-
-        showNotification(
-          "success",
-          "تم الإضافة",
-          `تم إضافة ${product.name} إلى المفضلة`,
-          { timer: 1500 }
-        );
-      }
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-      showNotification("error", "خطأ", "فشل في تحديث المفضلة", { timer: 2000 });
-    }
-  };
 
   const handleProductDetails = (product) => {
     navigate(`/product/${product.id}`, { state: { product } });
@@ -1061,35 +976,6 @@ const Home = () => {
     return !category || category.isActive;
   };
 
-  const checkLogin = (action) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      Swal.fire({
-        title: "تسجيل الدخول مطلوب",
-        text: `يجب تسجيل الدخول للوصول إلى ${action}`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#E41E26",
-        cancelButtonColor: "#6B7280",
-        confirmButtonText: "تسجيل الدخول",
-        cancelButtonText: "إنشاء حساب جديد",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login");
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          navigate("/register");
-        }
-      });
-      return false;
-    }
-    return true;
-  };
-
-  const handleNavigateToFavorites = () => {
-    if (!checkLogin("صفحة المفضلة")) return;
-    navigate("/favorites");
-  };
-
   const handleCategorySelectFromFooter = (categoryId) => {
     setSelectedCategory(categoryId);
     setCurrentPage(1);
@@ -1443,22 +1329,6 @@ const Home = () => {
                           <FaEye className="w-3.5 h-3.5" />
                           <span>عرض التفاصيل</span>
                         </button>
-
-                        <button
-                          onClick={(e) => handleToggleFavorite(product, e)}
-                          className={`flex-1 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 text-xs no-product-details ${
-                            isProductInFavorites(product.id)
-                              ? "text-red-500 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30"
-                              : "text-gray-400 bg-gray-50 dark:bg-gray-700 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600"
-                          }`}
-                        >
-                          {isProductInFavorites(product.id) ? (
-                            <FaHeart className="w-3.5 h-3.5" />
-                          ) : (
-                            <FaRegHeart className="w-3.5 h-3.5" />
-                          )}
-                          <span>المفضلة</span>
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -1491,20 +1361,6 @@ const Home = () => {
                         <div className="flex items-center gap-2">
                           {formatPriceDisplay(product)}
                         </div>
-                        <button
-                          onClick={(e) => handleToggleFavorite(product, e)}
-                          className={`p-2 rounded-full no-product-details ${
-                            isProductInFavorites(product.id)
-                              ? "text-red-500 bg-red-50 dark:bg-red-900/20"
-                              : "text-gray-400 bg-gray-50 dark:bg-gray-700 hover:text-red-500"
-                          }`}
-                        >
-                          {isProductInFavorites(product.id) ? (
-                            <FaHeart size={18} />
-                          ) : (
-                            <FaRegHeart size={18} />
-                          )}
-                        </button>
                       </div>
 
                       <div className="flex gap-2 mt-3 sm:mt-4">
@@ -1581,33 +1437,8 @@ const Home = () => {
         )}
       </div>
 
-      {/* Floating Buttons - Always Visible Favorites Button */}
+      {/* Floating Buttons - Only Admin Buttons */}
       <div className="fixed bottom-4 left-4 flex flex-col gap-3 z-40">
-        {/* Favorites Button - Always Visible */}
-        <button
-          onClick={handleNavigateToFavorites}
-          className="relative bg-gradient-to-r from-[#FF3366] to-[#FF6B9D] text-white rounded-full p-3 sm:p-4 shadow-2xl hover:scale-110 no-product-details"
-        >
-          <div className="relative flex items-center justify-center">
-            <FaHeart className="w-4 h-4 sm:w-6 sm:h-6" />
-
-            {favorites.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-white text-[#FF3366] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold shadow-md">
-                {favorites.length}
-              </span>
-            )}
-          </div>
-
-          <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 opacity-0 hover:opacity-100 pointer-events-none">
-            <div className="bg-gray-900 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-lg whitespace-nowrap">
-              منتجاتي المفضلة
-              <div className="absolute left-full top-1/2 transform -translate-y-1/2">
-                <div className="w-2 h-2 bg-gray-900 rotate-45"></div>
-              </div>
-            </div>
-          </div>
-        </button>
-
         {/* Admin Only Buttons - Only for Admin and Restaurant, NOT for Branch */}
         {canShowAdminButtons && (
           <>
