@@ -1114,7 +1114,7 @@ const TimeDateSalesReport = () => {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تقرير المبيعات بالوقت والتاريخ - Chicken One</title>
+<title>تقرير المبيعات بالوقت والتاريخ - Vako</title>
 <style>
   @media print {
     @page { margin: 0; size: A4 portrait; }
@@ -1267,7 +1267,7 @@ const TimeDateSalesReport = () => {
 <body>
 
 <div class="print-header">
-  <h1>تقرير المبيعات بالوقت والتاريخ - Chicken One</h1>
+  <h1>تقرير المبيعات بالوقت والتاريخ - Vako</h1>
   <p>نظام إدارة المطاعم</p>
   <p>الفرع: ${printSummary.branch}</p>
 </div>
@@ -1415,7 +1415,7 @@ ${
     (d) => toArabicNumbers(d)
   )}</p>
   <p>الفرع: ${printSummary.branch}</p>
-  <p>Chicken One © ${toArabicNumbers(new Date().getFullYear())}</p>
+  <p>Vako © ${toArabicNumbers(new Date().getFullYear())}</p>
 </div>
 
 </body>
