@@ -8,25 +8,15 @@ import ConfirmEmail from "./pages/ConfirmEmail";
 import ResetPassword from "./pages/ResetPassword";
 import AuthPage from "./pages/AuthPage";
 import Profile from "./pages/Profile";
-import Addresses from "./pages/Addresses";
 import Reviews from "./pages/Reviews";
-import Cart from "./pages/Cart";
-import OrderTracking from "./pages/OrderTracking";
-import MyOrders from "./pages/MyOrders";
 import ProductForm from "./pages/ProductForm";
 import Footer from "./components/Footer";
 import AdminUsers from "./pages/AdminUsers";
 import AdminBranches from "./pages/AdminBranches";
-import DeliveryCostManagement from "./pages/DeliveryCostManagement";
 import CitiesManagement from "./pages/CitiesManagement";
 import ProductDetails from "./pages/ProductDetails";
-import Favorites from "./pages/Favorites";
 import Branches from "./pages/Branches";
 import ItemOffersManagement from "./pages/ItemOffersManagement";
-import SalesReports from "./pages/SalesReports";
-import OrderShiftsManagement from "./pages/OrderShiftsManagement";
-import OrderShiftsReport from "./pages/OrderShiftsReport";
-import TimeDateSalesReport from "./pages/TimeDateSalesReport";
 
 function App() {
   const location = useLocation();
@@ -115,34 +105,16 @@ function App() {
           <Route path="/auth/verify-email-address" element={<ConfirmEmail />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/addresses" element={<Addresses />} />
           <Route path="/reviews" element={<Reviews />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/order-tracking" element={<OrderTracking />} />
-          <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/products/new" element={<ProductForm />} />
           <Route path="/products/edit" element={<ProductForm />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/branches" element={<AdminBranches />} />
-          <Route
-            path="/admin/delivery-cost"
-            element={<DeliveryCostManagement />}
-          />
-          {/* <Route path="/admin/coupons" element={<CouponsManagement />} /> */}
           <Route path="/admin/cities" element={<CitiesManagement />} />
           <Route path="/product/:id" element={<ProductDetails />} />
-          {/* <Route path="/cashier" element={<Cashier />} /> */}
-          <Route path="/favorites" element={<Favorites />} />
           <Route path="/branches" element={<Branches />} />
           <Route path="/admin/item-offers" element={<ItemOffersManagement />} />
-          <Route path="/admin/reports" element={<SalesReports />} />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/order-shifts" element={<OrderShiftsManagement />} />
-          <Route path="/admin/order-shifts" element={<OrderShiftsReport />} />
-          <Route
-            path="/admin/time-date-reports"
-            element={<TimeDateSalesReport />}
-          />
         </Routes>
       </main>
 
