@@ -29,10 +29,10 @@ export default function UserCard({
       transition={{ delay: index * 0.1 }}
       className={`bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 border-2 transition-all duration-300 ${
         isCurrentUser(user)
-          ? "border-[#E41E26] shadow-lg hover:shadow-xl"
+          ? "border-[#FB070F] shadow-lg hover:shadow-xl"
           : user.isActive === false
-          ? "border-red-200 shadow-md hover:shadow-lg"
-          : "border-gray-200/50 hover:shadow-lg"
+            ? "border-red-200 shadow-md hover:shadow-lg"
+            : "border-gray-200/50 hover:shadow-lg"
       } ${user.isActive === false ? "bg-red-50/50" : ""}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
@@ -45,7 +45,7 @@ export default function UserCard({
                 className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full object-cover border-2 ${
                   user.isActive === false
                     ? "border-red-300 grayscale"
-                    : "border-[#FDB913]"
+                    : "border-[#ff4d4d]"
                 }`}
               />
             ) : (
@@ -53,14 +53,14 @@ export default function UserCard({
                 className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center font-semibold text-base sm:text-lg md:text-xl border-2 ${
                   user.isActive === false
                     ? "bg-gray-300 text-gray-500 border-red-300 grayscale"
-                    : "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white border-[#FDB913]"
+                    : "bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] text-white border-[#ff4d4d]"
                 }`}
               >
                 {user.firstName?.charAt(0).toUpperCase() || "م"}
               </div>
             )}
             {isCurrentUser(user) && (
-              <div className="absolute -top-1 -right-1 bg-[#E41E26] text-white rounded-full p-1 border-2 border-white">
+              <div className="absolute -top-1 -right-1 bg-[#FB070F] text-white rounded-full p-1 border-2 border-white">
                 <FaUserShield className="text-xs" />
               </div>
             )}
@@ -82,7 +82,7 @@ export default function UserCard({
                   {user.firstName} {user.lastName}
                 </h3>
                 {isCurrentUser(user) && (
-                  <span className="bg-[#E41E26] text-white px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap">
+                  <span className="bg-[#FB070F] text-white px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap">
                     المستخدم الحالي
                   </span>
                 )}
@@ -93,7 +93,7 @@ export default function UserCard({
                   <span
                     key={role}
                     className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border ${getRoleBadgeColor(
-                      role
+                      role,
                     )} ${user.isActive === false ? "opacity-60" : ""}`}
                   >
                     {getRoleIcon(role)}
@@ -111,7 +111,7 @@ export default function UserCard({
               <div className="flex items-center gap-2">
                 <FaEnvelope
                   className={`flex-shrink-0 text-xs sm:text-sm ${
-                    user.isActive === false ? "text-gray-400" : "text-[#E41E26]"
+                    user.isActive === false ? "text-gray-400" : "text-[#FB070F]"
                   }`}
                 />
                 <span className="truncate">{user.email}</span>
@@ -119,7 +119,7 @@ export default function UserCard({
               <div className="flex items-center gap-2">
                 <FaPhone
                   className={`flex-shrink-0 text-xs sm:text-sm ${
-                    user.isActive === false ? "text-gray-400" : "text-[#E41E26]"
+                    user.isActive === false ? "text-gray-400" : "text-[#FB070F]"
                   }`}
                 />
                 <span>{user.phoneNumber || "غير متوفر"}</span>
@@ -159,8 +159,8 @@ export default function UserCard({
               isCurrentUser(user)
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : user.isActive === false
-                ? "bg-green-50 text-green-700 hover:bg-green-100"
-                : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
+                  ? "bg-green-50 text-green-700 hover:bg-green-100"
+                  : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
             }`}
           >
             {user.isActive === false ? (
@@ -197,7 +197,7 @@ export default function UserCard({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleAssignRole(user.id, role.name)}
                   className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold border transition-colors duration-200 ${getRoleBadgeColor(
-                    role.name
+                    role.name,
                   )} hover:opacity-80`}
                 >
                   {getRoleIcon(role.name)}

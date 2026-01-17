@@ -42,8 +42,8 @@ const showAuthMobileAlertToast = (message, type = "info") => {
       type === "error"
         ? toast.error
         : type === "warning"
-        ? toast.warning
-        : toast.info;
+          ? toast.warning
+          : toast.info;
     toastFunc(message, {
       position: "top-right",
       autoClose: 2500,
@@ -78,13 +78,13 @@ export default function AuthPage() {
   const location = useLocation();
 
   const { isLoading: loginLoading, isGoogleLoading } = useSelector(
-    (state) => state.login
+    (state) => state.login,
   );
 
   const { isLoading: registerLoading } = useSelector((state) => state.register);
 
   const [activeTab, setActiveTab] = useState(
-    location.pathname === "/register" ? "register" : "login"
+    location.pathname === "/register" ? "register" : "login",
   );
   const [forgetMode, setForgetMode] = useState(false);
   const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
@@ -225,7 +225,7 @@ export default function AuthPage() {
           if (window.innerWidth < 768) {
             showAuthMobileAlertToast(
               "حدث خطأ أثناء تسجيل الدخول باستخدام Google",
-              "error"
+              "error",
             );
             setTimeout(() => {
               navigate("/login");
@@ -343,7 +343,7 @@ export default function AuthPage() {
       if (window.innerWidth < 768) {
         showAuthMobileAlertToast(
           "حدث خطأ أثناء التوجيه إلى Google. يرجى المحاولة مرة أخرى.",
-          "error"
+          "error",
         );
       } else {
         Swal.fire({
@@ -392,7 +392,7 @@ export default function AuthPage() {
 
         if (window.innerWidth < 768) {
           showAuthMobileSuccessToast(
-            "تم إنشاء حسابك بنجاح! يرجى تأكيد بريدك الإلكتروني للمتابعة."
+            "تم إنشاء حسابك بنجاح! يرجى تأكيد بريدك الإلكتروني للمتابعة.",
           );
         } else {
           Swal.fire({
@@ -453,7 +453,7 @@ export default function AuthPage() {
       await axiosInstance.post(
         "/api/Auth/ForgetPassword",
         { email: forgetEmail },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
 
       Swal.close();
@@ -465,7 +465,7 @@ export default function AuthPage() {
       if (window.innerWidth < 768) {
         showAuthMobileAlertToast(
           "لقد أرسلنا رمز إعادة التعيين إلى بريدك الإلكتروني. يرجى التحقق من صندوق الوارد لإعادة تعيين كلمة المرور.",
-          "info"
+          "info",
         );
       } else {
         Swal.fire({
@@ -504,7 +504,7 @@ export default function AuthPage() {
 
       if (window.innerWidth < 768) {
         showAuthMobileSuccessToast(
-          "تم إرسال بريد تأكيد جديد إلى صندوق الوارد الخاص بك."
+          "تم إرسال بريد تأكيد جديد إلى صندوق الوارد الخاص بك.",
         );
       } else {
         Swal.fire({
@@ -560,15 +560,15 @@ export default function AuthPage() {
         try {
           const res = await axiosInstance.get(
             `/api/Auth/CheckConfirmationEmail?email=${encodeURIComponent(
-              userEmail
-            )}`
+              userEmail,
+            )}`,
           );
           if (res.status === 200) {
             Swal.close();
 
             if (window.innerWidth < 768) {
               showAuthMobileSuccessToast(
-                "تم تأكيد بريدك الإلكتروني. يمكنك الآن تسجيل الدخول."
+                "تم تأكيد بريدك الإلكتروني. يمكنك الآن تسجيل الدخول.",
               );
             } else {
               Swal.fire({
@@ -622,7 +622,7 @@ export default function AuthPage() {
         />
       ) : isProcessingGoogle ? (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26] dark:border-[#FDB913] mb-6"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FB070F] dark:border-[#ff4d4d] mb-6"></div>
         </div>
       ) : waitingForConfirmation ? (
         <WaitingConfirmation

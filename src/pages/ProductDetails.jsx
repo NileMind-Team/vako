@@ -53,7 +53,7 @@ const ProductDetails = () => {
         icon: type,
         title: title,
         text: text,
-        confirmButtonColor: options.confirmButtonColor || "#E41E26",
+        confirmButtonColor: options.confirmButtonColor || "#FB070F",
         timer: options.timer || 2500,
         showConfirmButton:
           options.showConfirmButton !== undefined
@@ -124,7 +124,7 @@ const ProductDetails = () => {
         icon: type,
         title: title,
         text: text,
-        confirmButtonColor: options.confirmButtonColor || "#E41E26",
+        confirmButtonColor: options.confirmButtonColor || "#FB070F",
         timer: options.timer || 2500,
         showConfirmButton:
           options.showConfirmButton !== undefined
@@ -175,7 +175,7 @@ const ProductDetails = () => {
       if (!categoryId) return;
 
       const response = await axiosInstance.get(
-        `/api/Categories/Get/${categoryId}`
+        `/api/Categories/Get/${categoryId}`,
       );
       return response.data;
     } catch (error) {
@@ -252,7 +252,7 @@ const ProductDetails = () => {
           everyday: productData.isAllTime,
           specificDays:
             productData.menuItemSchedules?.map((schedule) =>
-              getDayName(schedule.day)
+              getDayName(schedule.day),
             ) || [],
         },
         menuItemSchedules: productData.menuItemSchedules || [],
@@ -330,7 +330,7 @@ const ProductDetails = () => {
   const formatPriceDisplay = (product) => {
     if (product.isPriceBasedOnRequest) {
       return (
-        <div className="text-[#E41E26] font-bold text-2xl md:text-3xl">
+        <div className="text-[#FB070F] font-bold text-2xl md:text-3xl">
           السعر حسب الطلب
         </div>
       );
@@ -342,7 +342,7 @@ const ProductDetails = () => {
           <div className="text-gray-400 dark:text-gray-500 text-base md:text-lg line-through">
             {toArabicNumbers(product.price)} ج.م
           </div>
-          <div className="text-[#E41E26] font-bold text-2xl md:text-3xl">
+          <div className="text-[#FB070F] font-bold text-2xl md:text-3xl">
             {toArabicNumbers(product.finalPrice.toFixed(2))} ج.م
           </div>
         </>
@@ -350,7 +350,7 @@ const ProductDetails = () => {
     }
 
     return (
-      <div className="text-[#E41E26] font-bold text-2xl md:text-3xl">
+      <div className="text-[#FB070F] font-bold text-2xl md:text-3xl">
         {toArabicNumbers(product.price)} ج.م
       </div>
     );
@@ -383,7 +383,7 @@ const ProductDetails = () => {
       text: "لن تتمكن من التراجع عن هذا الإجراء!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#E41E26",
+      confirmButtonColor: "#FB070F",
       cancelButtonColor: "#6B7280",
       confirmButtonText: "نعم، احذفه!",
       cancelButtonText: "إلغاء",
@@ -411,14 +411,14 @@ const ProductDetails = () => {
         "error",
         "لا يمكن التعديل",
         "لا يمكن تعديل حالة المنتج لأن الفئة معطلة",
-        { timer: 2000 }
+        { timer: 2000 },
       );
       return;
     }
 
     try {
       await axiosInstance.put(
-        `/api/MenuItems/ChangeMenuItemActiveStatus/${product.id}`
+        `/api/MenuItems/ChangeMenuItemActiveStatus/${product.id}`,
       );
 
       setProduct({ ...product, isActive: !product.isActive });
@@ -428,7 +428,7 @@ const ProductDetails = () => {
         "success",
         "تم تحديث الحالة!",
         `تم ${currentActiveStatus ? "تعطيل" : "تفعيل"} المنتج`,
-        { timer: 1500 }
+        { timer: 1500 },
       );
     } catch (error) {
       console.error("Error updating product status:", error);
@@ -444,7 +444,7 @@ const ProductDetails = () => {
       const offersData = response.data;
 
       const existingOffer = offersData.find(
-        (offer) => offer.menuItemId === product.id
+        (offer) => offer.menuItemId === product.id,
       );
 
       if (existingOffer) {
@@ -511,7 +511,7 @@ const ProductDetails = () => {
             name: optionForm.name,
             price: optionForm.price,
             typeId: editingOption.typeId,
-          }
+          },
         );
 
         showMessage("success", "تم بنجاح!", "تم تحديث الخيار بنجاح", {
@@ -533,7 +533,7 @@ const ProductDetails = () => {
       text: "لن تتمكن من التراجع عن هذا الإجراء!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#E41E26",
+      confirmButtonColor: "#FB070F",
       cancelButtonColor: "#6B7280",
       confirmButtonText: "نعم، احذفه!",
       cancelButtonText: "إلغاء",
@@ -571,22 +571,22 @@ const ProductDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffebeb] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FB070F]"></div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffebeb] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
             المنتج غير موجود
           </h2>
           <button
             onClick={() => navigate("/")}
-            className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+            className="bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
           >
             العودة للرئيسية
           </button>
@@ -596,7 +596,7 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffebeb] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-300">
       {/* Option Modal */}
       {showOptionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -630,7 +630,7 @@ const ProductDetails = () => {
                   name="name"
                   value={optionForm.name}
                   onChange={handleOptionFormChange}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#FB070F] focus:border-transparent"
                   placeholder="أدخل اسم الخيار"
                   autoFocus
                 />
@@ -647,7 +647,7 @@ const ProductDetails = () => {
                   onChange={handleOptionFormChange}
                   min="0"
                   step="0.01"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#E41E26] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#FB070F] focus:border-transparent"
                   placeholder="أدخل السعر"
                 />
               </div>
@@ -662,7 +662,7 @@ const ProductDetails = () => {
               </button>
               <button
                 onClick={handleSaveOption}
-                className="flex-1 py-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <FaSave />
                 تحديث
@@ -702,7 +702,7 @@ const ProductDetails = () => {
                   animate={{ scale: 1 }}
                   className="absolute top-3 md:top-4 left-3 md:left-4 z-10"
                 >
-                  <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-xl shadow-2xl flex items-center gap-1.5 md:gap-2">
+                  <div className="bg-gradient-to-r from-[#FB070F] to-[#ff6b6b] text-white px-3 py-1.5 md:px-4 md:py-2 rounded-xl shadow-2xl flex items-center gap-1.5 md:gap-2">
                     <FaFire className="text-white animate-pulse" size={14} />
                     <span className="text-xs md:text-sm font-bold whitespace-nowrap">
                       {formatOfferText(product.itemOffer)}
@@ -765,7 +765,7 @@ const ProductDetails = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleDeleteProduct}
-                        className="bg-red-500 text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm"
+                        className="bg-[#FB070F] text-white p-2 md:p-3 rounded-xl shadow-lg hover:bg-[#e0060e] transition-colors flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm"
                       >
                         <FaTrash className="text-sm md:text-base" />
                         <span>حذف</span>
@@ -841,17 +841,17 @@ const ProductDetails = () => {
                           {product.preparationTimeStart &&
                           product.preparationTimeEnd
                             ? `${toArabicNumbers(
-                                product.preparationTimeStart
+                                product.preparationTimeStart,
                               )} - ${toArabicNumbers(
-                                product.preparationTimeEnd
+                                product.preparationTimeEnd,
                               )} دقيقة`
                             : product.preparationTimeStart
-                            ? `${toArabicNumbers(
-                                product.preparationTimeStart
-                              )} دقيقة`
-                            : `${toArabicNumbers(
-                                product.preparationTimeEnd
-                              )} دقيقة`}
+                              ? `${toArabicNumbers(
+                                  product.preparationTimeStart,
+                                )} دقيقة`
+                              : `${toArabicNumbers(
+                                  product.preparationTimeEnd,
+                                )} دقيقة`}
                         </div>
                       </div>
                     )}
@@ -912,7 +912,7 @@ const ProductDetails = () => {
                                         e.stopPropagation();
                                         handleOpenEditOptionModal(
                                           addon.id,
-                                          option
+                                          option,
                                         );
                                       }}
                                       className="bg-blue-500 text-white p-1.5 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
@@ -927,7 +927,7 @@ const ProductDetails = () => {
                                         e.stopPropagation();
                                         handleDeleteOption(option.id);
                                       }}
-                                      className="bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors shadow-md"
+                                      className="bg-[#FB070F] text-white p-1.5 rounded-lg hover:bg-[#e0060e] transition-colors shadow-md"
                                       title="حذف"
                                     >
                                       <FaTrash className="text-xs" />

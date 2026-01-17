@@ -96,7 +96,7 @@ const Branches = () => {
         icon: type,
         title: title,
         text: text,
-        confirmButtonColor: options.confirmButtonColor || "#E41E26",
+        confirmButtonColor: options.confirmButtonColor || "#FB070F",
         timer: options.timer || 2500,
         showConfirmButton:
           options.showConfirmButton !== undefined
@@ -131,7 +131,7 @@ const Branches = () => {
     };
 
     fetchBranchesAndCities();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -143,7 +143,7 @@ const Branches = () => {
         (branch) =>
           branch.name?.toLowerCase().includes(searchLower) ||
           branch.address?.toLowerCase().includes(searchLower) ||
-          branch.city?.name?.toLowerCase().includes(searchLower)
+          branch.city?.name?.toLowerCase().includes(searchLower),
       );
     }
 
@@ -243,18 +243,18 @@ const Branches = () => {
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
         stars.push(
-          <FaStar key={i} className="text-yellow-500 text-sm sm:text-base" />
+          <FaStar key={i} className="text-yellow-500 text-sm sm:text-base" />,
         );
       } else if (i === fullStars + 1 && hasHalfStar) {
         stars.push(
           <FaStarHalfAlt
             key={i}
             className="text-yellow-500 text-sm sm:text-base"
-          />
+          />,
         );
       } else {
         stars.push(
-          <FaRegStar key={i} className="text-gray-300 text-sm sm:text-base" />
+          <FaRegStar key={i} className="text-gray-300 text-sm sm:text-base" />,
         );
       }
     }
@@ -282,24 +282,23 @@ const Branches = () => {
   if (loading) {
     return (
       <div
-        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4"
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-[#fff5f5] to-[#ffebeb] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-4"
         dir="rtl"
       >
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E41E26]"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FB070F]"></div>
       </div>
     );
   }
 
   return (
     <>
-
       <div
-        className="min-h-screen bg-gradient-to-br from-white via-[#fff8e7] to-[#ffe5b4] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 md:px-6 py-3 sm:py-6 relative font-sans overflow-hidden transition-colors duration-300"
+        className="min-h-screen bg-gradient-to-br from-white via-[#fff5f5] to-[#ffebeb] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 px-3 sm:px-4 md:px-6 py-3 sm:py-6 relative font-sans overflow-hidden transition-colors duration-300"
         dir="rtl"
       >
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -left-10 sm:-left-20 -top-10 sm:-top-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#E41E26]/10 to-[#FDB913]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
-          <div className="absolute -right-10 sm:-right-20 -bottom-10 sm:-bottom-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#FDB913]/10 to-[#E41E26]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
+          <div className="absolute -left-10 sm:-left-20 -top-10 sm:-top-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#FB070F]/10 to-[#ff4d4d]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
+          <div className="absolute -right-10 sm:-right-20 -bottom-10 sm:-bottom-20 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-gradient-to-r from-[#ff4d4d]/10 to-[#FB070F]/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
         </div>
 
         {/* Map Modal */}
@@ -319,7 +318,7 @@ const Branches = () => {
               >
                 <div className="bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-600 flex items-center justify-between flex-shrink-0">
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <FaMap className="text-[#E41E26] text-lg sm:text-xl" />
+                    <FaMap className="text-[#FB070F] text-lg sm:text-xl" />
                     <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-white">
                       موقع {selectedBranchForMap.name}
                     </h3>
@@ -378,7 +377,7 @@ const Branches = () => {
           className="max-w-6xl mx-auto bg-white/90 backdrop-blur-xl shadow-lg sm:shadow-xl md:shadow-2xl rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/50 relative overflow-hidden dark:bg-gray-800/90 dark:border-gray-700/50"
         >
           {/* Header */}
-          <div className="relative h-32 sm:h-36 md:h-40 lg:h-44 xl:h-52 bg-gradient-to-r from-[#E41E26] to-[#FDB913] overflow-hidden">
+          <div className="relative h-32 sm:h-36 md:h-40 lg:h-44 xl:h-52 bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] overflow-hidden">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="absolute -top-4 sm:-top-6 -right-4 sm:-right-6 w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 bg-white/10 rounded-full"></div>
             <div className="absolute -bottom-4 sm:-bottom-6 -left-4 sm:-left-6 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-24 lg:h-24 bg-white/10 rounded-full"></div>
@@ -404,8 +403,8 @@ const Branches = () => {
                 transition={{ delay: 0.4 }}
                 className="text-white/80 text-xs sm:text-sm md:text-base px-2"
               >
-                اكتشف فروع Vako القريبة منك وتعرّف على تفاصيل كل فرع
-                وتقييمات العملاء
+                اكتشف فروع Vako القريبة منك وتعرّف على تفاصيل كل فرع وتقييمات
+                العملاء
               </motion.p>
             </div>
           </div>
@@ -422,12 +421,12 @@ const Branches = () => {
               {/* Search Input Only */}
               <div className="max-w-full sm:max-w-2xl mx-auto">
                 <div className="relative group">
-                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#E41E26] text-xs sm:text-sm transition-all duration-300 group-focus-within:scale-110" />
+                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#FB070F] text-xs sm:text-sm transition-all duration-300 group-focus-within:scale-110" />
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl md:rounded-2xl pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-xs sm:text-sm md:text-base shadow"
+                    className="w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg sm:rounded-xl md:rounded-2xl pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-4 outline-none focus:ring-2 focus:ring-[#FB070F] focus:border-transparent transition-all duration-200 text-xs sm:text-sm md:text-base shadow"
                     placeholder="ابحث باسم الفرع أو العنوان أو المدينة..."
                   />
                 </div>
@@ -437,11 +436,11 @@ const Branches = () => {
               <div className="text-center mt-3 sm:mt-4">
                 <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm md:text-base">
                   عرض{" "}
-                  <span className="font-bold text-[#E41E26]">
+                  <span className="font-bold text-[#FB070F]">
                     {filteredBranches.length}
                   </span>{" "}
                   من أصل{" "}
-                  <span className="font-bold text-[#E41E26]">
+                  <span className="font-bold text-[#FB070F]">
                     {branches.length}
                   </span>{" "}
                   فرع
@@ -457,7 +456,7 @@ const Branches = () => {
                 className="text-center py-8 sm:py-12 md:py-16 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200/50 dark:bg-gray-700/80 dark:border-gray-600/50 my-4 sm:my-6"
               >
                 <div className="max-w-md mx-auto px-3">
-                  <div className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                  <div className="bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                     <FaBuilding className="text-white text-2xl sm:text-3xl md:text-4xl" />
                   </div>
                   <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-200 mb-3 sm:mb-4">
@@ -475,7 +474,7 @@ const Branches = () => {
                       onClick={() => {
                         setSearchTerm("");
                       }}
-                      className="bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white px-6 sm:px-8 py-2.5 sm:py-3 md:py-4 rounded-xl sm:rounded-2xl font-bold hover:shadow-xl transition-all duration-300 text-sm sm:text-base md:text-lg"
+                      className="bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] text-white px-6 sm:px-8 py-2.5 sm:py-3 md:py-4 rounded-xl sm:rounded-2xl font-bold hover:shadow-xl transition-all duration-300 text-sm sm:text-base md:text-lg"
                     >
                       عرض جميع الفروع
                     </motion.button>
@@ -499,8 +498,8 @@ const Branches = () => {
                       <div
                         className={`p-1.5 rounded-lg transition-colors duration-300 ${
                           selectedBranch?.id === branch.id
-                            ? "bg-[#E41E26] text-white"
-                            : "bg-gray-100 dark:bg-gray-600 text-[#E41E26]"
+                            ? "bg-[#FB070F] text-white"
+                            : "bg-gray-100 dark:bg-gray-600 text-[#FB070F]"
                         }`}
                         onClick={() => toggleBranchDetails(branch)}
                       >
@@ -518,7 +517,7 @@ const Branches = () => {
                         <div className="flex-1">
                           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3">
                             <div className="flex items-start gap-2 sm:gap-3">
-                              <div className="p-1.5 sm:p-2 md:p-3 bg-gradient-to-r from-[#E41E26] to-[#FDB913] rounded-lg sm:rounded-xl text-white flex-shrink-0">
+                              <div className="p-1.5 sm:p-2 md:p-3 bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] rounded-lg sm:rounded-xl text-white flex-shrink-0">
                                 <FaBuilding className="text-sm sm:text-base md:text-lg" />
                               </div>
                               <div className="flex-1 min-w-0">
@@ -530,12 +529,12 @@ const Branches = () => {
                                     <div className="flex items-center gap-1">
                                       {getStatusIcon(
                                         branch.status,
-                                        branch.isActive
+                                        branch.isActive,
                                       )}
                                       <div
                                         className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-semibold ${getStatusColor(
                                           branch.status,
-                                          branch.isActive
+                                          branch.isActive,
                                         )}`}
                                       >
                                         {branch.isActive ? "نشط" : "غير نشط"}
@@ -544,7 +543,7 @@ const Branches = () => {
                                     <div
                                       className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-semibold ${getStatusColor(
                                         branch.status,
-                                        branch.isActive
+                                        branch.isActive,
                                       )}`}
                                     >
                                       {getStatusText(branch.status)}
@@ -554,14 +553,14 @@ const Branches = () => {
 
                                 <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
                                   <div className="flex items-center gap-1.5 sm:gap-2 text-gray-600 dark:text-gray-400">
-                                    <FaCity className="text-[#E41E26] text-xs sm:text-sm flex-shrink-0" />
+                                    <FaCity className="text-[#FB070F] text-xs sm:text-sm flex-shrink-0" />
                                     <span className="font-medium text-xs sm:text-sm md:text-base truncate">
                                       {branch.city?.name}
                                     </span>
                                   </div>
 
                                   <div className="flex items-center gap-1.5 sm:gap-2 text-gray-600 dark:text-gray-400">
-                                    <FaClock className="text-[#E41E26] text-xs sm:text-sm flex-shrink-0" />
+                                    <FaClock className="text-[#FB070F] text-xs sm:text-sm flex-shrink-0" />
                                     <span className="font-medium text-xs sm:text-sm md:text-base">
                                       {formatTime(branch.openingTime)} -{" "}
                                       {formatTime(branch.closingTime)}
@@ -585,8 +584,8 @@ const Branches = () => {
                           <div
                             className={`p-1.5 sm:p-2 rounded-lg transition-colors duration-300 ${
                               selectedBranch?.id === branch.id
-                                ? "bg-[#E41E26] text-white"
-                                : "bg-gray-100 dark:bg-gray-600 text-[#E41E26]"
+                                ? "bg-[#FB070F] text-white"
+                                : "bg-gray-100 dark:bg-gray-600 text-[#FB070F]"
                             }`}
                           >
                             <FaEye className="text-sm sm:text-base md:text-lg" />
@@ -616,7 +615,7 @@ const Branches = () => {
 
                                   {/* Address */}
                                   <div className="flex items-start gap-2 sm:gap-3">
-                                    <FaMapMarkerAlt className="text-[#E41E26] mt-0.5 sm:mt-1 flex-shrink-0 text-sm sm:text-base" />
+                                    <FaMapMarkerAlt className="text-[#FB070F] mt-0.5 sm:mt-1 flex-shrink-0 text-sm sm:text-base" />
                                     <div className="flex-1 min-w-0">
                                       <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-1">
                                         العنوان
@@ -630,7 +629,7 @@ const Branches = () => {
                                   {/* Email */}
                                   {branch.email && (
                                     <div className="flex items-start gap-2 sm:gap-3">
-                                      <FaEnvelope className="text-[#E41E26] mt-0.5 sm:mt-1 flex-shrink-0 text-sm sm:text-base" />
+                                      <FaEnvelope className="text-[#FB070F] mt-0.5 sm:mt-1 flex-shrink-0 text-sm sm:text-base" />
                                       <div className="flex-1 min-w-0">
                                         <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-1">
                                           البريد الإلكتروني
@@ -646,7 +645,7 @@ const Branches = () => {
                                   {branch.phoneNumbers &&
                                     branch.phoneNumbers.length > 0 && (
                                       <div className="flex items-start gap-2 sm:gap-3">
-                                        <FaPhone className="text-[#E41E26] mt-0.5 sm:mt-1 flex-shrink-0 text-sm sm:text-base" />
+                                        <FaPhone className="text-[#FB070F] mt-0.5 sm:mt-1 flex-shrink-0 text-sm sm:text-base" />
                                         <div className="flex-1 min-w-0">
                                           <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-2">
                                             أرقام الهاتف
@@ -664,7 +663,7 @@ const Branches = () => {
                                                     </span>
                                                     <span className="text-gray-500 dark:text-gray-400 text-xs bg-gray-200 dark:bg-gray-500 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded flex-shrink-0">
                                                       {getPhoneTypeArabic(
-                                                        phone.type
+                                                        phone.type,
                                                       )}
                                                     </span>
                                                   </div>
@@ -672,7 +671,7 @@ const Branches = () => {
                                                     <FaWhatsapp className="text-green-500 text-base sm:text-lg md:text-xl flex-shrink-0 ml-1" />
                                                   )}
                                                 </div>
-                                              )
+                                              ),
                                             )}
                                           </div>
                                         </div>
@@ -691,7 +690,7 @@ const Branches = () => {
                                       >
                                         <div className="flex items-center gap-2">
                                           <h4 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                            <FaCommentAlt className="text-[#E41E26]" />
+                                            <FaCommentAlt className="text-[#FB070F]" />
                                             تقييمات العملاء
                                             <span className="text-sm font-normal text-gray-600 dark:text-gray-400">
                                               ({branch.reviews.length})
@@ -700,9 +699,9 @@ const Branches = () => {
                                         </div>
                                         <div>
                                           {showReviews[branch.id] ? (
-                                            <FaChevronUp className="text-[#E41E26]" />
+                                            <FaChevronUp className="text-[#FB070F]" />
                                           ) : (
-                                            <FaChevronDown className="text-[#E41E26]" />
+                                            <FaChevronDown className="text-[#FB070F]" />
                                           )}
                                         </div>
                                       </div>
@@ -747,7 +746,7 @@ const Branches = () => {
                                                             <img
                                                               src={getImageUrl(
                                                                 review.user
-                                                                  .imageUrl
+                                                                  .imageUrl,
                                                               )}
                                                               alt={`${
                                                                 review.user
@@ -769,7 +768,7 @@ const Branches = () => {
                                                               }}
                                                             />
                                                           ) : (
-                                                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-[#E41E26] to-[#FDB913] flex items-center justify-center">
+                                                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] flex items-center justify-center">
                                                               <FaUserCircle className="text-white text-lg sm:text-xl" />
                                                             </div>
                                                           )}
@@ -799,7 +798,7 @@ const Branches = () => {
                                                           dir="ltr"
                                                         >
                                                           {renderStars(
-                                                            review.rating
+                                                            review.rating,
                                                           )}
                                                         </div>
                                                       </div>
@@ -809,7 +808,7 @@ const Branches = () => {
                                                     {review.comment && (
                                                       <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
                                                         <div className="flex items-start gap-2">
-                                                          <FaCommentAlt className="text-[#E41E26] mt-0.5 text-xs sm:text-sm flex-shrink-0" />
+                                                          <FaCommentAlt className="text-[#FB070F] mt-0.5 text-xs sm:text-sm flex-shrink-0" />
                                                           <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                                                             {review.comment}
                                                           </p>
@@ -817,7 +816,7 @@ const Branches = () => {
                                                       </div>
                                                     )}
                                                   </motion.div>
-                                                )
+                                                ),
                                               )}
                                             </div>
                                           </motion.div>
@@ -843,12 +842,12 @@ const Branches = () => {
                                       <div className="flex items-center justify-center gap-1">
                                         {getStatusIcon(
                                           branch.status,
-                                          branch.isActive
+                                          branch.isActive,
                                         )}
                                         <div
                                           className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-semibold ${getStatusColor(
                                             branch.status,
-                                            branch.isActive
+                                            branch.isActive,
                                           )}`}
                                         >
                                           {branch.isActive ? "نشط" : "غير نشط"}
@@ -872,7 +871,7 @@ const Branches = () => {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => handleViewOnMap(branch)}
-                                    className="w-full py-2.5 sm:py-3 md:py-4 bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white rounded-lg sm:rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base md:text-lg"
+                                    className="w-full py-2.5 sm:py-3 md:py-4 bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] text-white rounded-lg sm:rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base md:text-lg"
                                   >
                                     <FaMap className="text-xs sm:text-sm" />
                                     <span>عرض الخريطة</span>

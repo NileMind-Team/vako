@@ -41,7 +41,7 @@ export default function UserForm({
           </h3>
           <button
             onClick={resetForm}
-            className="text-gray-500 hover:text-[#E41E26] transition-colors duration-200 flex-shrink-0 ml-2"
+            className="text-gray-500 hover:text-[#FB070F] transition-colors duration-200 flex-shrink-0 ml-2"
           >
             <FaTimes size={16} className="sm:size-5" />
           </button>
@@ -54,7 +54,7 @@ export default function UserForm({
                 الاسم الأول *
               </label>
               <div className="relative group" style={{ direction: "ltr" }}>
-                <FaUser className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#E41E26] text-sm transition-all duration-300 group-focus-within:scale-110" />
+                <FaUser className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#FB070F] text-sm transition-all duration-300 group-focus-within:scale-110" />
                 <input
                   type="text"
                   name="firstName"
@@ -63,7 +63,7 @@ export default function UserForm({
                     setFormData({ ...formData, firstName: e.target.value })
                   }
                   required
-                  className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#FB070F] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                   placeholder="الاسم الأول"
                   style={{ textAlign: "right" }}
                 />
@@ -74,7 +74,7 @@ export default function UserForm({
                 الاسم الأخير *
               </label>
               <div className="relative group" style={{ direction: "ltr" }}>
-                <FaUser className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#E41E26] text-sm transition-all duration-300 group-focus-within:scale-110" />
+                <FaUser className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#FB070F] text-sm transition-all duration-300 group-focus-within:scale-110" />
                 <input
                   type="text"
                   name="lastName"
@@ -83,7 +83,7 @@ export default function UserForm({
                     setFormData({ ...formData, lastName: e.target.value })
                   }
                   required
-                  className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                  className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#FB070F] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                   placeholder="الاسم الأخير"
                   style={{ textAlign: "right" }}
                 />
@@ -96,7 +96,7 @@ export default function UserForm({
               البريد الإلكتروني *
             </label>
             <div className="relative group" style={{ direction: "ltr" }}>
-              <FaEnvelope className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#E41E26] text-sm transition-all duration-300 group-focus-within:scale-110" />
+              <FaEnvelope className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#FB070F] text-sm transition-all duration-300 group-focus-within:scale-110" />
               <input
                 type="email"
                 name="email"
@@ -105,7 +105,7 @@ export default function UserForm({
                   setFormData({ ...formData, email: e.target.value })
                 }
                 required
-                className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#FB070F] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                 placeholder="البريد الإلكتروني"
                 style={{ textAlign: "right" }}
               />
@@ -117,7 +117,7 @@ export default function UserForm({
               رقم الهاتف
             </label>
             <div className="relative group" style={{ direction: "ltr" }}>
-              <FaPhone className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#E41E26] text-sm transition-all duration-300 group-focus-within:scale-110" />
+              <FaPhone className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#FB070F] text-sm transition-all duration-300 group-focus-within:scale-110" />
               <input
                 type="tel"
                 name="phoneNumber"
@@ -125,7 +125,7 @@ export default function UserForm({
                 onChange={(e) =>
                   setFormData({ ...formData, phoneNumber: e.target.value })
                 }
-                className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-3 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#FB070F] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                 placeholder="رقم الهاتف"
                 style={{ textAlign: "right" }}
               />
@@ -137,10 +137,10 @@ export default function UserForm({
               كلمة المرور *
             </label>
             <div className="relative group" style={{ direction: "ltr" }}>
-              <FaLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#E41E26] text-sm transition-all duration-300 group-focus-within:scale-110" />
+              <FaLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#FB070F] text-sm transition-all duration-300 group-focus-within:scale-110" />
               <div
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#E41E26] cursor-pointer transition-colors duration-200 text-sm"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#FB070F] cursor-pointer transition-colors duration-200 text-sm"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </div>
@@ -152,7 +152,7 @@ export default function UserForm({
                   setFormData({ ...formData, password: e.target.value })
                 }
                 required
-                className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#E41E26] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                className="w-full border border-gray-200 bg-white text-black rounded-lg sm:rounded-xl pr-9 pl-9 py-2.5 sm:py-3 outline-none focus:ring-2 focus:ring-[#FB070F] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                 placeholder="كلمة المرور"
                 style={{ textAlign: "right" }}
               />
@@ -171,7 +171,7 @@ export default function UserForm({
                     id={`role-${role.name}`}
                     checked={formData.roles.includes(role.name)}
                     onChange={() => handleRoleToggle(role.name)}
-                    className="w-4 h-4 sm:w-5 sm:h-5 text-[#E41E26] bg-white border-gray-300 rounded focus:ring-[#E41E26] focus:ring-2"
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-[#FB070F] bg-white border-gray-300 rounded focus:ring-[#FB070F] focus:ring-2"
                   />
                   <label
                     htmlFor={`role-${role.name}`}
@@ -191,7 +191,7 @@ export default function UserForm({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={resetForm}
-              className="flex-1 py-2.5 sm:py-3 border-2 border-[#E41E26] text-[#E41E26] rounded-lg sm:rounded-xl font-semibold hover:bg-[#E41E26] hover:text-white transition-all duration-300 text-sm sm:text-base"
+              className="flex-1 py-2.5 sm:py-3 border-2 border-[#FB070F] text-[#FB070F] rounded-lg sm:rounded-xl font-semibold hover:bg-[#FB070F] hover:text-white transition-all duration-300 text-sm sm:text-base"
             >
               إلغاء
             </motion.button>
@@ -202,7 +202,7 @@ export default function UserForm({
               disabled={!isFormValid()}
               className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2 ${
                 isFormValid()
-                  ? "bg-gradient-to-r from-[#E41E26] to-[#FDB913] text-white hover:shadow-xl hover:shadow-[#E41E26]/25"
+                  ? "bg-gradient-to-r from-[#FB070F] to-[#ff4d4d] text-white hover:shadow-xl hover:shadow-[#FB070F]/25"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
